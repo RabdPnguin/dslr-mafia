@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import { Modal, Button, Input } from 'antd';
 import { writeStorage } from '@rehooks/local-storage';
 
@@ -8,6 +8,13 @@ const OkButton = ({ disabled, onClick }) => (
 
 const UsernameModal = ({ visible }) => {
   const [username, setUsername] = useState('');
+  const inputRef = useRef();
+
+  useLayoutEffect(() => {
+    if (visible && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [visible]);
 
   const okButtonClicked = () => {
     writeStorage('username', username);
@@ -19,7 +26,7 @@ const UsernameModal = ({ visible }) => {
       closable={false}
       visible={visible}
       footer={<OkButton disabled={!username} onClick={okButtonClicked} />}>
-      <Input value={username} onChange={e => setUsername(e.target.value)} />
+      <Input ref={inputRef} value={username} onChange={e => setUsername(e.target.value)} />
     </Modal>
   );
 };
