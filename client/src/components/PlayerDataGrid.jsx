@@ -1,10 +1,14 @@
 import { Popconfirm } from 'antd';
 import React from 'react';
+import { useRecoilState } from 'recoil';
+import { playersState } from '../atoms';
 import DataGrid from './DataGrid';
 
-const PlayerList = ({ dataSource, ...props }) => {
-  const recordDeleted = key => {
-    alert(`delete: ${key}`);
+const PlayerDataGrid = props => {
+  const [players, setPlayers] = useRecoilState(playersState);
+
+  const recordDeleted = id => {
+    setPlayers(players.filter(player => player.id !== id));
   };
 
   const recordChanged = record => {
@@ -28,7 +32,7 @@ const PlayerList = ({ dataSource, ...props }) => {
     key: 'x',
     align: 'right',
     render: (text, record) =>
-      dataSource.length >= 1 ? (
+      players.length >= 1 ? (
         <Popconfirm title={`Delete ${record.name}?`} onConfirm={() => recordDeleted(record.id)}>
           <a>Delete</a>
         </Popconfirm>
@@ -38,10 +42,10 @@ const PlayerList = ({ dataSource, ...props }) => {
   return (
     <DataGrid
       columns={columns}
-      dataSource={dataSource}
+      dataSource={players}
       onChange={recordChanged}
       {...props} />
   );
 };
 
-export default PlayerList;
+export default PlayerDataGrid;
