@@ -1,0 +1,5 @@
+D:\Development\RabdPnguin\dslr-mafia\server\obj\Debug\netcoreapp3.1\Server.csprojAssemblyReference.cache
+D:\Development\RabdPnguin\dslr-mafia\server\obj\Debug\netcoreapp3.1\Server.AssemblyInfoInputs.cache
+D:\Development\RabdPnguin\dslr-mafia\server\obj\Debug\netcoreapp3.1\Server.AssemblyInfo.cs
+D:\Development\RabdPnguin\dslr-mafia\server\obj\Debug\netcoreapp3.1\Server.csproj.CoreCompileInputs.cache
+D:\Development\RabdPnguin\dslr-mafia\server\obj\Debug\netcoreapp3.1\Server.MvcApplicationPartsAssemblyInfo.cache
