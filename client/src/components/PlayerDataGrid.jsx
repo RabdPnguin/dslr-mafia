@@ -12,7 +12,9 @@ const PlayerDataGrid = props => {
   };
 
   const recordChanged = record => {
-    alert(`saved: ${record.id}:${record.name}`)
+    setPlayers(players.map(player => player.id !== record.id
+      ? player
+      : { ...player, ...record }));
   };
 
   let columns = [{
