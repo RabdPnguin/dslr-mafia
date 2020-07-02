@@ -1,27 +1,8 @@
 import React from 'react';
-import { Layout, Menu, Table, Popconfirm } from 'antd';
+import { Layout, Menu } from 'antd';
 import { ReactComponent as Logo } from './images/secret.svg';
 import { UserOutlined } from '@ant-design/icons';
-
-const columns = [{
-  title: 'Player Name',
-  dataIndex: 'name',
-  key: 'name',
-  width: 300
-}, {
-  title: 'Aliases',
-  dataIndex: 'aliases',
-  key: 'aliases'
-}, {
-  title: '',
-  dataIndex: '',
-  key: 'x',
-  align: 'right',
-  render: (text, record) =>
-    <Popconfirm title={`Delete ${record.name}?`} onConfirm={() => { }}>
-      <a>Delete</a>
-    </Popconfirm>
-}];
+import PlayerList from './components/PlayerList';
 
 const data = [{
   id: 1,
@@ -53,7 +34,7 @@ const App = () => {
       <Layout className='site-layout'>
         <Layout.Header className='site-layout-background' />
         <Layout.Content className='site-layout-background' style={{ margin: '20px' }}>
-          <Table style={{ width: '50%' }} columns={columns} dataSource={data} />
+          <PlayerList style={{ width: '50%' }} dataSource={data} />
         </Layout.Content>
       </Layout>
     </Layout>
