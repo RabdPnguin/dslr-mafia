@@ -53,7 +53,7 @@ const App = () => {
       <Layout className='site-layout'>
         <Layout.Header className='site-layout-background' />
         <Layout.Content className='site-layout-background' style={{ margin: '20px' }}>
-          <Table columns={columns} dataSource={data} />
+          <Table style={{ width: '50%' }} columns={columns} dataSource={data} />
         </Layout.Content>
       </Layout>
     </Layout>
