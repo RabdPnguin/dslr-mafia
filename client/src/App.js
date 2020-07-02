@@ -10,11 +10,23 @@ const columns = [{
   width: 300
 }, {
   title: 'Aliases',
-  dataIndex: 'alias',
-  key: 'alias'
+  dataIndex: 'aliases',
+  key: 'aliases'
 }];
 
-const data = [];
+const data = [{
+  id: 1,
+  name: 'rabidpenguin',
+  aliases: 'rp, rabid'
+}, {
+  id: 2,
+  name: 'El Quintron',
+  aliases: 'elq'
+}, {
+  id: 3,
+  name: 'Chaplain',
+  aliases: 'chap'
+}];
 
 const App = () => {
   return (
