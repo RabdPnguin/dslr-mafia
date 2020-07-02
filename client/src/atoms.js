@@ -1,17 +1,18 @@
 import { atom } from 'recoil';
+import { v4 as uuid } from 'uuid';
 
 export const playersState = atom({
   key: 'players',
   default: [{
-    id: 1,
+    key: uuid(),
     name: 'rabidpenguin',
     aliases: 'rp, rabid'
   }, {
-    id: 2,
+    key: uuid(),
     name: 'El Quintron',
     aliases: 'elq'
   }, {
-    id: 3,
+    key: uuid(),
     name: 'Chaplain',
     aliases: 'chap'
   }]

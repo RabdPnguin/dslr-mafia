@@ -1,21 +1,30 @@
 import { Popconfirm } from 'antd';
 import React from 'react';
 import { useRecoilState } from 'recoil';
+import { v4 as uuid } from 'uuid';
 import { playersState } from '../atoms';
+import AddPlayer from './AddPlayer';
 import DataGrid from './DataGrid';
 
 const PlayerDataGrid = props => {
   const [players, setPlayers] = useRecoilState(playersState);
 
-  const recordDeleted = id => {
-    setPlayers(players.filter(player => player.id !== id));
+  const playerDeleted = key => {
+    setPlayers(players.filter(player => player.key !== key));
   };
 
-  const recordChanged = record => {
-    setPlayers(players.map(player => player.id !== record.id
-      ? player
-      : { ...player, ...record }));
+  const playerChanged = player => {
+    setPlayers(players.map(p => p.key !== player.key ? p : { ...p, ...player }));
   };
+
+  const playerAdded = player => {
+    const newPlayer = {
+      key: uuid(),
+      ...player
+    };
+
+    setPlayers([...players, newPlayer]);
+  }
 
   let columns = [{
     title: 'Player Name',
@@ -35,18 +44,21 @@ const PlayerDataGrid = props => {
     align: 'right',
     render: (text, record) =>
       players.length >= 1 ? (
-        <Popconfirm title={`Delete ${record.name}?`} onConfirm={() => recordDeleted(record.id)}>
+        <Popconfirm title={`Delete ${record.name}?`} onConfirm={() => playerDeleted(record.key)}>
           <a>Delete</a>
         </Popconfirm>
       ) : null
   }];
 
   return (
-    <DataGrid
-      columns={columns}
-      dataSource={players}
-      onChange={recordChanged}
-      {...props} />
+    <div {...props}>
+      <AddPlayer onAdd={playerAdded} />
+      <DataGrid
+        columns={columns}
+        dataSource={players}
+        onChange={playerChanged}
+      />
+    </div>
   );
 };
 
