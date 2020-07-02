@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Table } from 'antd';
+import { Layout, Menu, Table, Popconfirm } from 'antd';
 import { ReactComponent as Logo } from './images/secret.svg';
 import { UserOutlined } from '@ant-design/icons';
 
@@ -12,6 +12,15 @@ const columns = [{
   title: 'Aliases',
   dataIndex: 'aliases',
   key: 'aliases'
+}, {
+  title: '',
+  dataIndex: '',
+  key: 'x',
+  align: 'right',
+  render: (text, record) =>
+    <Popconfirm title={`Delete ${record.name}?`} onConfirm={() => { }}>
+      <a>Delete</a>
+    </Popconfirm>
 }];
 
 const data = [{
@@ -43,7 +52,7 @@ const App = () => {
       </Layout.Sider>
       <Layout className='site-layout'>
         <Layout.Header className='site-layout-background' />
-        <Layout.Content className='site-layout-background' style={{ margin: '10px' }}>
+        <Layout.Content className='site-layout-background' style={{ margin: '20px' }}>
           <Table columns={columns} dataSource={data} />
         </Layout.Content>
       </Layout>
