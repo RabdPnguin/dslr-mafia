@@ -22,8 +22,8 @@ RUN yarn build
 
 # publish
 # FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
-WORKDIR /client
-COPY /client/build ./build
+# WORKDIR /client
+# COPY ./client/build/ ./build/
 # COPY --from=build-node /client/build ./build
 
 # WORKDIR /server
