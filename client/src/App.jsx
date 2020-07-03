@@ -20,7 +20,7 @@ const App = () => {
       <Layout className='site-layout'>
         <Layout.Header className='site-layout-background' />
         <Layout.Content className='site-layout-background' style={{ margin: '20px' }}>
-          <PlayerDataGrid style={{ width: '50%' }} />
+          <PlayerDataGrid style={{ width: '50%', minWidth: '550px' }} />
         </Layout.Content>
       </Layout>
     </Layout>

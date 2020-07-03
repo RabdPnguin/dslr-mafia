@@ -5,21 +5,35 @@ const AddPlayer = ({ onAdd, ...props }) => {
   const [name, setName] = useState('');
   const [aliases, setAliases] = useState('');
 
+  const playerAdded = () => {
+    onAdd({ name, aliases });
+    clearState();
+  }
+
+  const clearState = () => {
+    setName('');
+    setAliases('');
+  }
+
   return (
-    <Row>
-      <Col flex='300px'>
-        <Input placeholder='Player Name' onChange={e => setName(e.target.value)} />
+    <Row {...props}>
+      <Col flex='250px'>
+        <Input
+          placeholder='Player Name'
+          value={name}
+          onChange={e => setName(e.target.value)} />
       </Col>
       <Col flex='auto'>
-        <Input placeholder='Aliases' onChange={e => setAliases(e.target.value)} />
+        <Input
+          placeholder='Aliases'
+          value={aliases}
+          onChange={e => setAliases(e.target.value)} />
       </Col>
       <Col>
         <Button
           type='primary'
           disabled={!name}
-          style={{ marginBottom: 16 }}
-          onClick={() => onAdd({ name, aliases })}
-          {...props}>
+          onClick={playerAdded}>
           Add Player
       </Button>
       </Col>

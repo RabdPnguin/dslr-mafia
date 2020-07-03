@@ -1,6 +1,7 @@
 import { Form, Input, Table } from 'antd';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import './DataGrid.less';
+import Nbsp from './Nbsp';
 
 const EditableContext = React.createContext();
 
@@ -60,7 +61,7 @@ const EditableCell = ({
       </Form.Item>
     ) : (
         <div className='editable-cell-value-wrap' onClick={toggleEdit}>
-          {children}
+          <Nbsp />{children}
         </div>
       );
   }

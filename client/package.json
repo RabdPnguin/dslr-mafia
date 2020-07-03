@@ -16,6 +16,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "recoil": "^0.0.10",
+    "recoil-persist": "^0.6.0",
     "uuid": "^8.2.0"
   },
   "scripts": {

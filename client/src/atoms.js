@@ -15,5 +15,8 @@ export const playersState = atom({
     key: uuid(),
     name: 'Chaplain',
     aliases: 'chap'
-  }]
+  }],
+  persistence_UNSTABLE: {
+    type: 'players'
+  }
 });
