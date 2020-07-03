@@ -17,6 +17,7 @@
     "react-scripts": "3.4.1",
     "recoil": "^0.0.10",
     "recoil-persist": "^0.6.0",
+    "save-file": "^2.3.1",
     "uuid": "^8.2.0"
   },
   "scripts": {

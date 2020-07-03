@@ -1,14 +1,16 @@
 import { Popconfirm, Button, Space } from 'antd';
-import React from 'react';
+import React, { useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { v4 as uuid } from 'uuid';
 import { playersState } from '../atoms';
 import AddPlayer from './AddPlayer';
 import DataGrid from './DataGrid';
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { save } from 'save-file';
 
 const PlayerDataGrid = props => {
   const [players, setPlayers] = useRecoilState(playersState);
+  const fileUploaderRef = useRef();
 
   const playerDeleted = key => {
     setPlayers(players.filter(player => player.key !== key));
@@ -25,7 +27,23 @@ const PlayerDataGrid = props => {
     };
 
     setPlayers([...players, newPlayer]);
-  }
+  };
+
+  const importPlayers = event => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = e => {
+      setPlayers(JSON.parse(e.target.result));
+    }
+  };
+
+  const exportPlayers = async () => {
+    await save(JSON.stringify(players), 'players.json');
+  };
 
   let columns = [{
     title: 'Player Name',
@@ -53,9 +71,22 @@ const PlayerDataGrid = props => {
 
   return (
     <div {...props}>
+      <input type="file" id="playersFile" ref={fileUploaderRef} onChange={importPlayers} style={{ display: "none" }} />
       <Space style={{ marginBottom: 16 }}>
-        <Button style={{ width: '100px' }} type='primary' icon={<UploadOutlined />}>Import</Button>
-        <Button style={{ width: '100px' }} type='primary' icon={<DownloadOutlined />}>Export</Button>
+        <Button
+          style={{ width: '100px' }}
+          type='primary'
+          icon={<UploadOutlined />}
+          onClick={() => fileUploaderRef.current.click()}>
+          Import
+        </Button>
+        <Button
+          style={{ width: '100px' }}
+          type='primary'
+          icon={<DownloadOutlined />}
+          onClick={exportPlayers}>
+          Export
+        </Button>
       </Space>
       <AddPlayer style={{ marginBottom: 16 }} onAdd={playerAdded} />
       <DataGrid
