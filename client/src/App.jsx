@@ -5,9 +5,17 @@ import { UserOutlined, TeamOutlined } from '@ant-design/icons';
 import PlayersScene from './Scenes/PlayersScene';
 import GamesScene from './Scenes/GamesScene';
 
-const menuItemState = {
-  '1': <PlayersScene style={{ width: '50%', minWidth: '550px' }} />,
-  '2': <GamesScene />
+const menuItems = {
+  '1': {
+    label: 'Players',
+    icon: <UserOutlined />,
+    scene: <PlayersScene style={{ width: '50%', minWidth: '550px' }} />
+  },
+  '2': {
+    label: 'Games',
+    icon: <TeamOutlined />,
+    scene: <GamesScene />
+  }
 }
 
 const App = () => {
@@ -22,18 +30,20 @@ const App = () => {
           <Logo style={{ display: 'block', margin: 'auto', height: '32px', width: '32px' }} />
         </div>
         <Menu theme='dark' mode='inline' selectedKeys={[selectedMenuItem]} onSelect={selectedMenuItemChanged}>
-          <Menu.Item key='1' icon={<UserOutlined />}>
-            Players
-          </Menu.Item>
-          <Menu.Item key='2' icon={<TeamOutlined />}>
-            Games
-          </Menu.Item>
+          {
+            Object.entries(menuItems)
+              .map(([key, value]) => (
+                <Menu.Item key={key} icon={value.icon}>
+                  {value.label}
+                </Menu.Item>
+              ))
+          }
         </Menu>
       </Layout.Sider>
       <Layout className='site-layout'>
         <Layout.Header className='site-layout-background' />
         <Layout.Content className='site-layout-background' style={{ margin: '20px' }}>
-          {menuItemState[selectedMenuItem]}
+          {menuItems[selectedMenuItem].scene}
         </Layout.Content>
       </Layout>
     </Layout>
