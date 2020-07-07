@@ -9,7 +9,7 @@ const menuItems = {
   '1': {
     label: 'Players',
     icon: <UserOutlined />,
-    scene: <PlayersScene style={{ width: '50%', minWidth: '550px' }} />
+    scene: <PlayersScene />
   },
   '2': {
     label: 'Games',

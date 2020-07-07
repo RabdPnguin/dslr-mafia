@@ -1,30 +1,8 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { gamesQuery } from '../../atoms';
-import DataGrid from '../../components/DataGrid';
+import GameDataGrid from './GameDataGrid';
 
-const GamesScene = () => {
-  const games = useRecoilValue(gamesQuery);
-
-  const columns = [{
-    title: 'Title',
-    dataIndex: 'title',
-    key: 'title'
-  }, {
-    title: 'Moderator',
-    dataIndex: 'author',
-    key: 'author'
-  }];
-
-  return (
-    <DataGrid
-      bordered={false}
-      size='small'
-      rowKey='title'
-      columns={columns}
-      dataSource={games}
-    />
-  );
-};
+const GamesScene = () => (
+  <GameDataGrid style={{ width: '50%', minWidth: '550px' }} />
+);
 
 export default GamesScene;
