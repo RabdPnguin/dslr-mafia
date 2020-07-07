@@ -25,5 +25,5 @@ WORKDIR /client
 COPY --from=build-node /client/build ./build
 
 WORKDIR /server
-COPY --from=build-dotnet /server/out .
+COPY --from=build-dotnet /server/WebApi/out .
 CMD dotnet WebApi.dll
