@@ -29,7 +29,6 @@ const GameDataGrid = props => {
         rowKey='title'
         columns={columns}
         dataSource={loading ? [] : games.contents}
-
       />
     </div>
   );
