@@ -7,7 +7,7 @@ namespace DslrParser.Tests
     [Fact]
     public void Test1()
     {
-      var games = TopicParser.GetGames();
+      var games = TopicParser.GetTopics();
     }
   }
 }

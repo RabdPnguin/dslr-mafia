@@ -13,7 +13,7 @@ RUN yarn build
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-dotnet
 WORKDIR /server
 
-COPY ./server/WebApi/*.csproj .
+COPY ./server/ .
 RUN dotnet restore
 
 COPY . .
