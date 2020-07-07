@@ -15,7 +15,6 @@ namespace DslrMafia
       this.config = config;
     }
 
-    [System.Obsolete]
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -27,7 +26,6 @@ namespace DslrMafia
       services.AddSpaStaticFiles(spa => spa.RootPath = "../client/build");
     }
 
-    [System.Obsolete]
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
       app.UseCors(config => config

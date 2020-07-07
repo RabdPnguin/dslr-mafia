@@ -14,7 +14,11 @@ const menuItems = {
   '2': {
     label: 'Games',
     icon: <TeamOutlined />,
-    scene: <GamesScene />
+    scene: (
+      <React.Suspense fallback={<div />}>
+        <GamesScene />
+      </React.Suspense>
+    )
   }
 }
 

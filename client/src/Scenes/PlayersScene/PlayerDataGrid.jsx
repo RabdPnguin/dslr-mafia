@@ -45,7 +45,7 @@ const PlayerDataGrid = props => {
     await save(JSON.stringify(players), 'players.json');
   };
 
-  let columns = [{
+  const columns = [{
     title: 'Player Name',
     dataIndex: 'name',
     key: 'name',
@@ -90,8 +90,8 @@ const PlayerDataGrid = props => {
       </Space>
       <AddPlayer style={{ marginBottom: 16 }} onAdd={playerAdded} />
       <DataGrid
-        columns={columns}
         bordered={false}
+        columns={columns}
         dataSource={players}
         onChange={playerChanged}
       />
