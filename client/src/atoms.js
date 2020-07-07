@@ -1,7 +1,8 @@
 import { atom, selector } from 'recoil';
 import axios from 'axios';
 
-const url = url => `http://localhost:5000/${url}`;
+const port = process.env.PORT || 5000
+const url = url => `http://localhost:${port}/${url}`;
 
 export const playersState = atom({
   key: 'players',
