@@ -17,7 +17,7 @@ COPY ./server/ .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Debug -o out
 
 # publish
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
