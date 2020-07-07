@@ -17,7 +17,7 @@ COPY ./server/ .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish -c Debug -o out
+RUN dotnet publish -c Release -o out
 
 # publish
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
@@ -26,4 +26,4 @@ COPY --from=build-node /client/build ./build
 
 WORKDIR /server
 COPY --from=build-dotnet /server/WebApi/out .
-CMD dotnet WebApi.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet WebApi.dll
