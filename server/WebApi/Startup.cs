@@ -31,7 +31,7 @@ namespace DslrMafia
       app.UseCors(config => config
         .AllowAnyMethod()
         .AllowAnyHeader()
-        .WithOrigins("http://localhost:3000")
+        .WithOrigins("http://localhost:3000", "https://dslr-mafia.herokuapp.com")
         .AllowCredentials());
 
       app.UseStaticFiles();
