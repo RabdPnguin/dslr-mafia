@@ -13,13 +13,14 @@ const GamesScene = () => {
   }, {
     title: 'Moderator',
     dataIndex: 'author',
-    key: 'moderator'
+    key: 'author'
   }];
 
   return (
     <DataGrid
       bordered={false}
       size='small'
+      rowKey='title'
       columns={columns}
       dataSource={games}
     />

@@ -1,8 +1,6 @@
 import { atom, selector } from 'recoil';
 import axios from 'axios';
 
-const url = url => `/${url}`;
-
 export const playersState = atom({
   key: 'players',
   default: [],
@@ -14,7 +12,7 @@ export const playersState = atom({
 export const gamesQuery = selector({
   key: 'games',
   get: async () => {
-    const result = await axios.get(url('games'));
+    const result = await axios.get('/games');
     return result.data;
   }
 });
