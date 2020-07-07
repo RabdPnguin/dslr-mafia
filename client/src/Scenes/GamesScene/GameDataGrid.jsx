@@ -1,10 +1,13 @@
 import React from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValueLoadable } from 'recoil';
 import { gamesQuery } from '../../atoms';
 import DataGrid from '../../components/DataGrid';
 
 const GameDataGrid = props => {
-  const games = useRecoilValue(gamesQuery);
+  const games = useRecoilValueLoadable(gamesQuery);
+  const loading = games.state === 'loading';
+
+  console.log(games);
 
   const columns = [{
     title: 'Title',
@@ -20,11 +23,13 @@ const GameDataGrid = props => {
   return (
     <div {...props}>
       <DataGrid
+        loading={loading}
         bordered={false}
         size='small'
         rowKey='title'
         columns={columns}
-        dataSource={games}
+        dataSource={loading ? [] : games.contents}
+
       />
     </div>
   );
