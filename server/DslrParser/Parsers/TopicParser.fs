@@ -1,19 +1,16 @@
 ﻿module TopicParser
 
-open System.Linq
 open FSharp.Data
 
 #if DEBUG
-let [<Literal>] private url = "./TestData/Topics.html"
+let private url = "./TestData/Topics.html"
 #else
-let [<Literal>] private url = "https://www.dslreports.com/forum/pubgames"
+let private url = "https://www.dslreports.com/forum/pubgames"
 #endif
-
-type private TopicsProvider = HtmlProvider<url>
 
 type Topic = {Title: string; Author: string; Group: string}
 
-let private getHtml () = TopicsProvider.Load(url).Tables.Table6.Html
+let private getHtml () = HtmlDocument.Load(url).Html()
 let private getTopicsHtml (page: HtmlNode) = page.CssSelect(".td_topic")
 let private getGroupsHtml (page: HtmlNode) = page.CssSelect(".td_group") |> Seq.skip 1
 
@@ -40,7 +37,7 @@ let private getTopic (topic: HtmlNode, group: HtmlNode) =
 
 let private filterGame (topic: Topic) = topic.Group = "game"
 
-let GetTopics () =
+let GetGames () =
   let page = getHtml()
   let topics = getTopicsHtml page
   let groups = getGroupsHtml page

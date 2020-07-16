@@ -79,6 +79,7 @@ const components = {
 const DataGrid = ({
   columns,
   dataSource,
+  selectedRow,
   onChange,
   ...props
 }) => {
@@ -102,10 +103,16 @@ const DataGrid = ({
   return (
     <Table
       components={components}
-      rowClassName={() => 'editable-row'}
+      rowClassName={record => {
+        const style = s => s ? ` ${s}` : '';
+        const selectableRow = selectedRow && style('selectable-row');
+        const selectedStyle = selectedRow && record[selectedRow.key] === selectedRow.value && style('ant-table-row-selected');
+        return `editable-row${selectedStyle}${selectableRow}`;
+      }}
       bordered
       dataSource={dataSource}
       columns={formattedColumns}
+      pagination={{ size: 'small' }}
       {...props}
     />
   );

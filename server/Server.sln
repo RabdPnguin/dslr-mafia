@@ -5,9 +5,7 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{4C9A1593-4895-4005-A787-5F36E486840C}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DslrParser", "DslrParser\DslrParser.fsproj", "{A87D2680-E4BE-4434-89A7-E10779ECE6C5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DslrParser.Tests", "DslrParser.Tests\DslrParser.Tests.csproj", "{918157BC-1DFC-4540-AB62-D0A9BE6E88A3}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DslrParser", "DslrParser\DslrParser.fsproj", "{A87D2680-E4BE-4434-89A7-E10779ECE6C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{4D4552A8-DDBC-4916-9F1D-C527ED6ECFE1}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,10 +26,6 @@ Global
 		{A87D2680-E4BE-4434-89A7-E10779ECE6C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A87D2680-E4BE-4434-89A7-E10779ECE6C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A87D2680-E4BE-4434-89A7-E10779ECE6C5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{918157BC-1DFC-4540-AB62-D0A9BE6E88A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{918157BC-1DFC-4540-AB62-D0A9BE6E88A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{918157BC-1DFC-4540-AB62-D0A9BE6E88A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{918157BC-1DFC-4540-AB62-D0A9BE6E88A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

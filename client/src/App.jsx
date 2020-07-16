@@ -42,7 +42,7 @@ const App = () => {
       </Layout.Sider>
       <Layout className='site-layout'>
         <Layout.Header className='site-layout-background' />
-        <Layout.Content className='site-layout-background' style={{ margin: '20px' }}>
+        <Layout.Content className='site-layout-background' style={{ margin: '15px' }}>
           {menuItems[selectedMenuItem].scene}
         </Layout.Content>
       </Layout>

@@ -5,13 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Parsers\TopicParser.fs" />
+    <Compile Include="Parsers\ThreadParser.fs" />
+    <Content Include="TestData\Thread.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Topics.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="TopicParser.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="fsharp.data" Version="3.3.3" />

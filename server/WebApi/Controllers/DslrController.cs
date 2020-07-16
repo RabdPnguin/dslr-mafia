@@ -7,7 +7,15 @@ namespace WebApi.Controllers
     [HttpGet, Route("games")]
     public IActionResult GetGames()
     {
-      return this.Ok(TopicParser.GetTopics());
+      var result = TopicParser.GetGames();
+      return this.Ok(result);
+    }
+
+    [HttpGet, Route("games/{id}/players")]
+    public IActionResult GetPlayers(string id)
+    {
+      var result = ThreadParser.GetPlayers(id);
+      return this.Ok(result);
     }
   }
 }
