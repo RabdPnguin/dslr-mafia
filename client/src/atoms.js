@@ -1,6 +1,5 @@
 import { atom, selector } from 'recoil';
 import axios from 'axios';
-import { resolveOnChange } from 'antd/lib/input/Input';
 
 export const playersState = atom({
   key: 'players',
@@ -29,8 +28,13 @@ export const playersQuery = selector({
     const id = get(selectedGameState);
     if (!id) return waitAndResolve([]);
 
-    const result = await axios.get(`/games/${get(selectedGameState)}/players`);
-    return result.data || [];
+    try {
+      const result = await axios.get(`/games/${get(selectedGameState)}/players`);
+      return result.data || [];
+    } catch (error) {
+      console.error(error.response);
+      return [];
+    }
   }
 });
 

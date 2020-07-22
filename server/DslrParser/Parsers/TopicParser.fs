@@ -8,7 +8,7 @@ let private url = "./TestData/Topics.html"
 let private url = "https://www.dslreports.com/forum/pubgames"
 #endif
 
-type Topic = {Title: string; Author: string; Group: string}
+type Topic = {Id: string; Title: string; Author: string; Group: string}
 
 let private getHtml () = HtmlDocument.Load(url).Html()
 let private getTopicsHtml (page: HtmlNode) = page.CssSelect(".td_topic")
@@ -19,11 +19,18 @@ let private valueOrDefault (node: HtmlNode option) =
   | Some value -> value.InnerText().Trim()
   | None -> ""
 
+let private getIdAndTitle (node: HtmlNode option) =
+  match node with
+  | None -> ("", "")
+  | Some value -> match value.TryGetAttribute("href") with
+    | None -> ("", "")
+    | Some href -> (href.Value().[7..], valueOrDefault(Some value))
+
 let private getTitleAndAuthor (post: HtmlNode) =
   let a = post.CssSelect("a")
-  let title = Seq.tryHead a |> valueOrDefault
+  let (id, title) = Seq.tryHead a |> getIdAndTitle
   let author = Seq.tryLast a |> valueOrDefault
-  (title, author)
+  (id, title, author)
 
 let private getGroup (post: HtmlNode) =
   let a = post.CssSelect("a")
@@ -31,9 +38,9 @@ let private getGroup (post: HtmlNode) =
   group
 
 let private getTopic (topic: HtmlNode, group: HtmlNode) =
-  let (title, author) = getTitleAndAuthor(topic)
+  let (id, title, author) = getTitleAndAuthor(topic)
   let group = getGroup(group)
-  {Title = title; Author = author; Group = group}
+  {Id = id; Title = title; Author = author; Group = group}
 
 let private filterGame (topic: Topic) = topic.Group = "game"
 

@@ -5,6 +5,14 @@ import Nbsp from './Nbsp';
 
 const EditableContext = React.createContext();
 
+const HeaderCell = ({ visible, className = '', children }) => {
+  return visible ? (
+    <th className={`ant-table-cell ${className}`}>
+      {children}
+    </th >
+  ) : null;
+};
+
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -18,6 +26,7 @@ const EditableRow = ({ index, ...props }) => {
 
 const EditableCell = ({
   title,
+  visible,
   editable,
   children,
   dataIndex,
@@ -66,10 +75,17 @@ const EditableCell = ({
       );
   }
 
-  return <td {...props}>{childNode}</td>;
+  const td = <td {...props} >{childNode}</td>;
+
+  return typeof childNode[1] === 'object'
+    ? td
+    : visible ? td : null;
 };
 
 const components = {
+  header: {
+    cell: HeaderCell
+  },
   body: {
     row: EditableRow,
     cell: EditableCell
@@ -84,17 +100,25 @@ const DataGrid = ({
   ...props
 }) => {
   const formattedColumns = columns.map(column => {
-    if (!column.editable) {
-      return column;
-    }
+    const {
+      editable = false,
+      visible = true,
+      dataIndex,
+      title,
+    } = column;
 
     return {
       ...column,
+      onHeaderCell: record => ({
+        record,
+        visible
+      }),
       onCell: record => ({
         record,
-        editable: column.editable,
-        dataIndex: column.dataIndex,
-        title: column.title,
+        editable,
+        visible,
+        dataIndex,
+        title,
         onSave: onChange
       })
     }
@@ -102,6 +126,7 @@ const DataGrid = ({
 
   return (
     <Table
+      size='small'
       components={components}
       rowClassName={record => {
         const style = s => s ? ` ${s}` : '';
@@ -109,7 +134,7 @@ const DataGrid = ({
         const selectedStyle = selectedRow && record[selectedRow.key] === selectedRow.value && style('ant-table-row-selected');
         return `editable-row${selectedStyle}${selectableRow}`;
       }}
-      bordered
+      bordered={false}
       dataSource={dataSource}
       columns={formattedColumns}
       pagination={{ size: 'small' }}

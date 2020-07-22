@@ -5,25 +5,19 @@ import DataGrid from '../../components/DataGrid';
 
 const columns = [{
   title: 'Player',
-  dataIndex: 'player',
-  key: 'player'
+  dataIndex: 'player'
 }];
 
-const PlayerDataGrid = props => {
+const PlayerDataGrid = () => {
   const players = useRecoilValueLoadable(playersQuery);
   const loading = players.state === 'loading';
 
   return (
-    <div {...props}>
-      <DataGrid
-        loading={false}
-        bordered={false}
-        size='small'
-        rowKey='title'
-        columns={columns}
-        dataSource={loading ? [] : players.contents.map(player => ({ player }))}
-      />
-    </div>
+    <DataGrid
+      loading={loading}
+      columns={columns}
+      dataSource={loading ? [] : players.contents.map(player => ({ player }))}
+    />
   );
 };
 

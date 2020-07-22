@@ -48,17 +48,13 @@ const PlayerDataGrid = props => {
   const columns = [{
     title: 'Player Name',
     dataIndex: 'name',
-    key: 'name',
     editable: true,
     width: 250
   }, {
     title: 'Aliases',
     dataIndex: 'aliases',
-    key: 'aliases',
     editable: true
   }, {
-    title: '',
-    dataIndex: '',
     key: 'x',
     align: 'right',
     render: (text, record) =>
@@ -90,7 +86,6 @@ const PlayerDataGrid = props => {
       </Space>
       <AddPlayer style={{ marginBottom: 16 }} onAdd={playerAdded} />
       <DataGrid
-        bordered={false}
         columns={columns}
         dataSource={players}
         onChange={playerChanged}
