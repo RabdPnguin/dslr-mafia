@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
@@ -7,14 +8,14 @@ namespace WebApi.Controllers
     [HttpGet, Route("games")]
     public IActionResult GetGames()
     {
-      var result = TopicParser.GetGames();
+      var result = TopicParser.GetGames().ToList();
       return this.Ok(result);
     }
 
     [HttpGet, Route("games/{id}/players")]
     public IActionResult GetPlayers(string id)
     {
-      var result = ThreadParser.GetPlayers(id);
+      var result = ThreadParser.GetPlayers(id).ToList();
       return this.Ok(result);
     }
   }

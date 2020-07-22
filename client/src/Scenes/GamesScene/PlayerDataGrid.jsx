@@ -17,6 +17,7 @@ const PlayerDataGrid = () => {
       loading={loading}
       columns={columns}
       dataSource={loading ? [] : players.contents.map(player => ({ player }))}
+      rowKey='player'
     />
   );
 };

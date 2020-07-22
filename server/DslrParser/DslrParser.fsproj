@@ -7,7 +7,13 @@
   <ItemGroup>
     <Compile Include="Parsers\TopicParser.fs" />
     <Compile Include="Parsers\ThreadParser.fs" />
-    <Content Include="TestData\Thread.html">
+    <Content Include="TestData\r32680903-game-Kids-with-Guns-V2.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\r32756183-game-Vote-Count-Tester.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\r32769419-game-The-Dog-Days-of-C9.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Topics.html">

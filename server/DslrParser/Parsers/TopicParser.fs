@@ -22,7 +22,8 @@ let private valueOrDefault (node: HtmlNode option) =
 let private getIdAndTitle (node: HtmlNode option) =
   match node with
   | None -> ("", "")
-  | Some value -> match value.TryGetAttribute("href") with
+  | Some value ->
+    match value.TryGetAttribute("href") with
     | None -> ("", "")
     | Some href -> (href.Value().[7..], valueOrDefault(Some value))
 
@@ -51,3 +52,4 @@ let GetGames () =
   Seq.zip topics groups
     |> Seq.map(getTopic)
     |> Seq.filter(filterGame)
+    |> Seq.toArray
