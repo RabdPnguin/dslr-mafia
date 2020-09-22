@@ -2,11 +2,7 @@
 
 open FSharp.Data
 
-#if DEBUG
-let private url = "./TestData/Topics.html"
-#else
 let private url = "https://www.dslreports.com/forum/pubgames"
-#endif
 
 type Topic = {Id: string; Title: string; Author: string; Group: string}
 

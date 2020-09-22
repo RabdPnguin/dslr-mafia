@@ -3,49 +3,34 @@
 open System
 open FSharp.Data
 
-#if DEBUG
-let private url id = "./TestData/" + id + ".html"
-#else
-let private url id = "https://www.dslreports.com/forum/" + id
-#endif
+let private url id page = "https://www.dslreports.com/forum/" + id + "~start=" + (page * 30).ToString()
 
-type Players = string list
+type Player = {Name: string; Post: string}
+type Players = Player list
 
-let private getHtml (gameId: string) = HtmlDocument.Load(url gameId).Html()
+let private getHtml (gameId: string, page: int) = HtmlDocument.Load(url gameId page).Html()
 
-let private isEmptyOrElement (value: string) = 
+let private isEmpty (value: string) =
   let v = value.Trim()
-  String.IsNullOrEmpty v || v.StartsWith('<')
+  String.IsNullOrEmpty v
 
-let private notEmptyOrElement = not << isEmptyOrElement
-let private isNotPlayerList (line: string) =
-  line.IndexOf("Player List", StringComparison.OrdinalIgnoreCase) = -1
+let private notEmpty = not << isEmpty
 
-let private parsePlayers (post: HtmlNode option) =
-  match post with
-  | None -> Seq.empty
-  | Some p ->
-    let td = p.CssSelect("td")
+let private getPosts (page: HtmlNode) =
+  let table = page.CssSelect(".soft-tbl-5").Head
+  let authors = table.CssSelect(".authorName").CssSelect("a") |> Seq.map(fun a -> a.InnerText())
+  let posts = table.CssSelect(".forum_post") |> Seq.map(fun p -> p.ToString())
+  Seq.zip authors posts |> Seq.map(fun (a, p) -> (a.ToString(), p))
 
-    Seq.last td
-    |> fun node -> node.CssSelect(".forum_post")
-    |> Seq.tryHead
-    |> fun node ->
-      match node with
-      | None -> Seq.empty
-      | Some value ->
-        value.ToString()
-        |> fun txt -> txt.Split([|"\r"; "\n"; "\r\n"; "<br>"|], StringSplitOptions.RemoveEmptyEntries)
-        |> Seq.skipWhile(isNotPlayerList)
-        |> Seq.skipWhile(isEmptyOrElement)
-        |> Seq.takeWhile(notEmptyOrElement)
-
-let private getPlayers (page: HtmlNode) =
-  page.CssSelect(".soft-tbl-5").Head.CssSelect("tr")
-    |> Seq.tryHead
-    |> parsePlayers
+let private getPages (gameId: string) =
+  seq {
+    for i = 0 to 6 do
+      let html = getHtml (gameId, i)
+      let posts = html |> getPosts
+      yield! posts
+  }
 
 let GetPlayers (gameId: string) =
-  getHtml gameId
-  |> getPlayers
-  |> Seq.toArray
+  getPages gameId
+  |> Seq.takeWhile(fun (_, post) -> notEmpty(post))
+  |> Seq.map(fun (author, post) -> {Name=author; Post=post})
