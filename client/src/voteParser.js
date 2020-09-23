@@ -33,11 +33,11 @@ function parsePosts(posts) {
     const {name, post: text} = posts[i];
     
     if (name === op) {
-      if (isDay(text)) {
+      if (!day && isDay(text)) {
         day = true;
         dayCount++;
       }
-      else if (isNight(text)) {
+      else if (day && isNight(text)) {
         day = false;
       }
     } else {
