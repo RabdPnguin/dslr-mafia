@@ -17,10 +17,11 @@ let private isEmpty (value: string) =
 let private notEmpty = not << isEmpty
 
 let private getPosts (page: HtmlNode) =
-  let table = page.CssSelect(".soft-tbl-5").Head
-  let authors = table.CssSelect(".authorName").CssSelect("a") |> Seq.map(fun a -> a.InnerText())
-  let posts = table.CssSelect(".forum_post") |> Seq.map(fun p -> p.ToString())
-  Seq.zip authors posts |> Seq.map(fun (a, p) -> (a.ToString(), p))
+  page.CssSelect("td[data-rmid]")
+    |> Seq.map(fun node ->
+      let author = node.CssSelect(".authorName").CssSelect("a").Head.InnerText()
+      let post = node.CssSelect(".forum_post").Head.ToString()
+      (author.ToLower(), post))
 
 let private getPages (gameId: string) =
   seq {

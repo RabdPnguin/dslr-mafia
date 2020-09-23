@@ -1,9 +1,21 @@
 import React from 'react';
-import { useRecoilValueLoadable } from 'recoil';
-import { playersQuery } from '../../atoms';
+import { useRecoilValue } from 'recoil';
+import { aliasState } from '../../atoms';
+import { useVotes } from '../../voteParser';
 import DataGrid from '../../components/DataGrid';
+import { Tabs } from 'antd';
 
-const columns = [{
+const rawDataColumns = [{
+  title: 'Player',
+  dataIndex: 'player',
+  width: 200
+}, {
+  title: 'Vote',
+  dataIndex: 'vote',
+  width: 200
+}];
+
+const parsedDataColumns = [{
   title: 'Player',
   dataIndex: 'player',
   width: 200
@@ -21,18 +33,32 @@ const columns = [{
 }];
 
 const PlayerDataGrid = () => {
-  const players = useRecoilValueLoadable(playersQuery);
-  const loading = players.state === 'loading';
+  const [players, rawVotes, loading] = useVotes();
+  const alias = useRecoilValue(aliasState);
 
-  console.log(players);
+  const rawVotesByDay = loading
+    ? []
+    : Object.entries(rawVotes).map(([day, votes]) => ({day, votes}));
 
   return (
-    <DataGrid
-      loading={loading}
-      columns={columns}
-      dataSource={loading ? [] : players.contents.map(player => ({ player }))}
-      rowKey='player'
-    />
+    <Tabs>
+      {rawVotesByDay.map(({day, votes}) => {
+        const playerVotes = Object.entries(votes)
+          .map(([player, vote]) => ({player, vote}))
+          .sort((a, b) => a.player.localeCompare(b.player));
+
+        return (
+          <Tabs.TabPane key={day} tab={`Day ${day}`}>
+            <DataGrid
+              loading={loading}
+              columns={rawDataColumns}
+              dataSource={playerVotes}
+              rowKey='player'
+            />
+          </Tabs.TabPane>
+        );
+      })}
+    </Tabs>
   );
 };
 

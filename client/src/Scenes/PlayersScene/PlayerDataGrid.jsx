@@ -2,14 +2,14 @@ import { Popconfirm, Button, Space } from 'antd';
 import React, { useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { v4 as uuid } from 'uuid';
-import { playersState } from '../../atoms';
+import { aliasState } from '../../atoms';
 import AddPlayer from './AddPlayer';
 import DataGrid from '../../components/DataGrid';
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { save } from 'save-file';
 
 const PlayerDataGrid = props => {
-  const [players, setPlayers] = useRecoilState(playersState);
+  const [players, setPlayers] = useRecoilState(aliasState);
   const fileUploaderRef = useRef();
 
   const playerDeleted = key => {
