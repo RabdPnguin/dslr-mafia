@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import { useRecoilValue } from 'recoil';
 import { aliasState } from '../../atoms';
 import { useVotes } from '../../voteParser';
@@ -39,9 +39,12 @@ const PlayerDataGrid = () => {
   const [players, rawVotes, loading] = useVotes();
   const aliases = useRecoilValue(aliasState);
   const [formattedVotes, setFormattedVotes] = useState([]);
+  const deadPlayers = useRef([]);
 
   useEffect(() => {
     if (!loading) {
+      deadPlayers.current = [];
+
       setFormattedVotes(
         Object.entries(rawVotes).map(([day, votes]) => {
           const playerVotes = Object.entries(votes);
@@ -49,8 +52,6 @@ const PlayerDataGrid = () => {
           return {
             day,
             votes: playerVotes.map(([player, vote]) => {
-              console.log(player);
-              console.log(aliases);
               const alias = aliases
                 .find(a => a.name.toLowerCase() === player)
                 ?.aliases.split(',')
@@ -60,20 +61,21 @@ const PlayerDataGrid = () => {
                 .filter(([,v]) => v === player || alias.includes(v))
                 .map(([p]) => p);
 
-              const Formatted = () => {
-                if (votesAgainst.length) {
-                  const totalVotesToLynch = Math.ceil(players.length / 2);
-                  const votesLeftToLynch = totalVotesToLynch - votesAgainst.length;
-                  return <span><b>{player}</b> -{votesAgainst.length}- <i>{votesAgainst.join(', ')}</i> {`(L-${votesLeftToLynch})`}</span>;
-                } else {
-                  return null;
-                }
+              const totalVotesToLynch = Math.ceil((players.length - deadPlayers.current.length) / 2);
+              const votesLeftToLynch = totalVotesToLynch - votesAgainst.length;
+              
+              const formatted = votesAgainst.length
+                  ? <span><b>{player}</b> -{votesAgainst.length}- <i>{votesAgainst.join(', ')}</i> {`(L-${votesLeftToLynch})`}</span>
+                  : null;
+
+              if (votesLeftToLynch === 0) {
+                deadPlayers.current.push(player);
               }
 
               return {
                 player,
                 vote,
-                formatted: <Formatted />
+                formatted
               }
             })
             .sort((a, b) => a.player.localeCompare(b.player)),
