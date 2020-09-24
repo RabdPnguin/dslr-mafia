@@ -24,8 +24,10 @@ function parsePosts(posts) {
 
   const op = posts[0].name;
   const players = parsePlayers(posts[0].post);
+  const initialPlayerVotes = players
+    .reduce((acc, cur) => ({...acc, [cur]: []}), {});
+  
   const votes = {};
-
   let day = false;
   let dayCount = 0;
 
@@ -36,12 +38,13 @@ function parsePosts(posts) {
       if (!day && isDay(text)) {
         day = true;
         dayCount++;
+        votes[dayCount] = {...initialPlayerVotes};
       }
       else if (day && isNight(text)) {
         day = false;
       }
     } else {
-      const validPlayer = players.some(p => p == name);
+      const validPlayer = players.some(p => p === name);
 
       if (validPlayer && day) {
         let currentDaysVotes = votes[dayCount];
