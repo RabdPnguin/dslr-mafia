@@ -5,18 +5,15 @@ import { postsQuery } from './atoms';
 export function useVotes() {
   const posts = useRecoilValueLoadable(postsQuery);
   const loading = posts.state === 'loading';
-  const [players, setPlayers] = useState([]);
-  const [votes, setVotes] = useState({});
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     if (!loading) {
-      const [p, v] = parsePosts(posts.contents);
-      setPlayers(p || []);
-      setVotes(v || {});
+      setData(parsePosts(posts.contents));
     }
   }, [loading, posts.contents]);
 
-  return [players, votes];
+  return [...data, loading];
 }
 
 function parsePosts(posts) {
@@ -25,9 +22,10 @@ function parsePosts(posts) {
   const op = posts[0].name;
   const players = parsePlayers(posts[0].post);
   const initialPlayerVotes = players
-    .reduce((acc, cur) => ({...acc, [cur]: []}), {});
+    .reduce((acc, cur) => ({...acc, [cur]: ''}), {});
   
   const votes = {};
+  const deadPlayers = {};
   let day = false;
   let dayCount = 0;
 
@@ -39,6 +37,13 @@ function parsePosts(posts) {
         day = true;
         dayCount++;
         votes[dayCount] = {...initialPlayerVotes};
+        
+        if (dayCount > 1) {
+          const nightKill = parseNightKill(text);
+          if (nightKill) {
+            deadPlayers[dayCount] = nightKill;
+          }
+        }
       }
       else if (day && isNight(text)) {
         day = false;
@@ -59,15 +64,19 @@ function parsePosts(posts) {
     }
   }
 
-  return [players, votes];
+  return [players ?? [], votes ?? {}, deadPlayers ?? {}];
 }
 
 function isDay(post) {
-  return post.search(/it's day/gi) !== -1;
+  return post.search(/(it's day)|(it is day)|(mafia wins)|(town wins)/gi) !== -1;
 }
 
 function isNight(post) {
-  return post.search(/it's night/gi) !== -1;
+  return post.search(/(it's night)|(it is night)|(twilight)/gi) !== -1;
+}
+
+function parseNightKill(post) {
+  return post.match(/welcome, ?<b>(?<name>.*?)<\/b>/i)?.groups.name.toLowerCase();
 }
 
 function parsePlayerVotes(post, currentVote = '') {

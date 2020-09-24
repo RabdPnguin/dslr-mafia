@@ -4,6 +4,7 @@ import { aliasState } from '../../atoms';
 import { useVotes } from '../../voteParser';
 import DataGrid from '../../components/DataGrid';
 import { Tabs } from 'antd';
+import './PlayerDataGrid.less';
 
 const rawDataColumns = [{
   title: 'Player',
@@ -36,14 +37,14 @@ const parsedDataColumns = [{
 }];
 
 const PlayerDataGrid = () => {
-  const [players, rawVotes, loading] = useVotes();
+  const [players, rawVotes, rawDeadPlayers, loading] = useVotes();
   const aliases = useRecoilValue(aliasState);
   const [formattedVotes, setFormattedVotes] = useState([]);
-  const deadPlayers = useRef([]);
+  const deadPlayers = useRef(new Set());
 
   useEffect(() => {
-    if (!loading) {
-      deadPlayers.current = [];
+    if (!loading && rawVotes) {
+      deadPlayers.current.clear();
 
       setFormattedVotes(
         Object.entries(rawVotes).map(([day, votes]) => {
@@ -61,15 +62,15 @@ const PlayerDataGrid = () => {
                 .filter(([,v]) => v === player || alias.includes(v))
                 .map(([p]) => p);
 
-              const totalVotesToLynch = Math.ceil((players.length - deadPlayers.current.length) / 2);
+              const totalVotesToLynch = Math.ceil((players.length - deadPlayers.current.size) / 2);
               const votesLeftToLynch = totalVotesToLynch - votesAgainst.length;
               
               const formatted = votesAgainst.length
                   ? <span><b>{player}</b> -{votesAgainst.length}- <i>{votesAgainst.join(', ')}</i> {`(L-${votesLeftToLynch})`}</span>
                   : null;
 
-              if (votesLeftToLynch === 0) {
-                deadPlayers.current.push(player);
+              if (votesLeftToLynch === 0 || player === rawDeadPlayers[day] || alias.includes(rawDeadPlayers[day])) {
+                deadPlayers.current.add(player);
               }
 
               return {

@@ -97,6 +97,7 @@ const DataGrid = ({
   dataSource,
   selectedRow,
   onChange,
+  rowClassName,
   ...props
 }) => {
   const formattedColumns = columns.map(column => {
@@ -132,7 +133,7 @@ const DataGrid = ({
         const style = s => s ? ` ${s}` : '';
         const selectableRow = selectedRow && style('selectable-row');
         const selectedStyle = selectedRow && record[selectedRow.key] === selectedRow.value && style('ant-table-row-selected');
-        return `editable-row${selectedStyle}${selectableRow}`;
+        return `editable-row${selectedStyle}${selectableRow} ${rowClassName?.(record)}`.trim();
       }}
       bordered={false}
       dataSource={dataSource}
