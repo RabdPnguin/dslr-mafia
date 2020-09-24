@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useRecoilValue } from 'recoil';
 import { aliasState } from '../../atoms';
 import { useVotes } from '../../voteParser';
@@ -13,6 +13,9 @@ const rawDataColumns = [{
   title: 'Vote',
   dataIndex: 'vote',
   width: 200
+}, {
+  title: 'Formatted',
+  dataIndex: 'formatted'
 }];
 
 const parsedDataColumns = [{
@@ -35,29 +38,55 @@ const parsedDataColumns = [{
 const PlayerDataGrid = () => {
   const [players, rawVotes, loading] = useVotes();
   const alias = useRecoilValue(aliasState);
+  const [formattedVotes, setFormattedVotes] = useState([]);
 
-  const rawVotesByDay = loading
-    ? []
-    : Object.entries(rawVotes).map(([day, votes]) => ({day, votes}));
+  useEffect(() => {
+    if (!loading) {
+      setFormattedVotes(
+        Object.entries(rawVotes).map(([day, votes]) => {
+          const playerVotes = Object.entries(votes);
+
+          return {
+            day,
+            votes: playerVotes.map(([player, vote]) => {
+              const votesAgainst = playerVotes
+                .filter(([,v]) => v === player)
+                .map(([p]) => p);
+
+              const Formatted = () => {
+                if (votesAgainst.length) {
+                  const totalVotesToLynch = Math.ceil(players.length / 2);
+                  const votesLeftToLynch = totalVotesToLynch - votesAgainst.length;
+                  return <span><b>{player}</b> -{votesAgainst.length}- <i>{votesAgainst.join(', ')}</i> {`(L-${votesLeftToLynch})`}</span>;
+                } else {
+                  return null;
+                }
+              }
+
+              return {
+                player,
+                vote,
+                formatted: <Formatted />
+              }
+            })
+            .sort((a, b) => a.player.localeCompare(b.player)),
+          }})
+      );
+    }
+  }, [rawVotes]);
 
   return (
     <Tabs>
-      {rawVotesByDay.map(({day, votes}) => {
-        const playerVotes = Object.entries(votes)
-          .map(([player, vote]) => ({player, vote}))
-          .sort((a, b) => a.player.localeCompare(b.player));
-
-        return (
+      {formattedVotes.map(({day, votes}) => (
           <Tabs.TabPane key={day} tab={`Day ${day}`}>
             <DataGrid
               loading={loading}
               columns={rawDataColumns}
-              dataSource={playerVotes}
+              dataSource={votes}
               rowKey='player'
             />
           </Tabs.TabPane>
-        );
-      })}
+      ))}
     </Tabs>
   );
 };
