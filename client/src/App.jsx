@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { ReactComponent as Logo } from './images/secret.svg';
-import { UserOutlined, TeamOutlined } from '@ant-design/icons';
-import PlayersScene from './Scenes/PlayersScene';
+import { SettingOutlined, TeamOutlined } from '@ant-design/icons';
+import SettingsScene from './Scenes/SettingsScene';
 import GamesScene from './Scenes/GamesScene';
 
 const menuItems = {
   '1': {
-    label: 'Players',
-    icon: <UserOutlined />,
-    scene: <PlayersScene />
+    label: 'Settings',
+    icon: <SettingOutlined />,
+    scene: <SettingsScene />
   },
   '2': {
     label: 'Games',
