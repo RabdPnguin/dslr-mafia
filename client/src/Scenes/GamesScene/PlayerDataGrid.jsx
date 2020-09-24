@@ -37,7 +37,7 @@ const parsedDataColumns = [{
 
 const PlayerDataGrid = () => {
   const [players, rawVotes, loading] = useVotes();
-  const alias = useRecoilValue(aliasState);
+  const aliases = useRecoilValue(aliasState);
   const [formattedVotes, setFormattedVotes] = useState([]);
 
   useEffect(() => {
@@ -49,8 +49,15 @@ const PlayerDataGrid = () => {
           return {
             day,
             votes: playerVotes.map(([player, vote]) => {
+              console.log(player);
+              console.log(aliases);
+              const alias = aliases
+                .find(a => a.name.toLowerCase() === player)
+                ?.aliases.split(',')
+                .map(a => a.toLowerCase().trim()) ?? [];
+
               const votesAgainst = playerVotes
-                .filter(([,v]) => v === player)
+                .filter(([,v]) => v === player || alias.includes(v))
                 .map(([p]) => p);
 
               const Formatted = () => {
