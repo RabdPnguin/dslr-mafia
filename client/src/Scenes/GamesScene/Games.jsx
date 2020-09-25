@@ -8,7 +8,7 @@ const columns = [{
   dataIndex: 'id',
   visible: false
 }, {
-  title: 'Title',
+  title: 'Game',
   dataIndex: 'title'
 }, {
   title: 'Moderator',
@@ -16,7 +16,7 @@ const columns = [{
   width: 250
 }];
 
-const GameDataGrid = () => {
+const Games = () => {
   const [selectedGame, setSelectedGame] = useRecoilState(selectedGameState);
   const games = useRecoilValueLoadable(gamesQuery);
   const loading = games.state === 'loading';
@@ -37,4 +37,4 @@ const GameDataGrid = () => {
   );
 };
 
-export default GameDataGrid;
+export default Games;

@@ -49,18 +49,18 @@ export const nightKillPatternState = atom({
   }
 });
 
-// export const selectedGameState = atom({
-//   key: 'selected-game',
-//   default: null
-// });
+export const selectedGameState = atom({
+  key: 'selected-game',
+  default: null
+});
 
-// export const gamesQuery = selector({
-//   key: 'games',
-//   get: async () => {
-//     const result = await axios.get('/games');
-//     return result.data;
-//   }
-// });
+export const gamesQuery = selector({
+  key: 'games',
+  get: async () => {
+    const result = await axios.get('/games');
+    return result.data;
+  }
+});
 
 // export const postsQuery = selector({
 //   key: 'game-players',

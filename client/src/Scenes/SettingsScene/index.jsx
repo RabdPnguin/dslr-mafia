@@ -1,5 +1,5 @@
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Space, Tabs } from 'antd';
+import { Button, Space, Tabs, Row, Col } from 'antd';
 import React, { useRef } from 'react';
 import { save } from 'save-file';
 import DayPatterns from './DayPatterns';
@@ -33,45 +33,49 @@ const SettingsScene = () => {
   };
 
   return (
-    <>
-      <input type="file" id="playersFile" ref={fileUploaderRef} onChange={importSettings} style={{ display: "none" }} />
-      <Space style={{ marginBottom: 16 }}>
-        <Button
-          style={{ width: '100px' }}
-          type='primary'
-          icon={<UploadOutlined />}
-          onClick={() => fileUploaderRef.current.click()}>
-          Import
-        </Button>
-        <Button
-          style={{ width: '100px' }}
-          type='primary'
-          icon={<DownloadOutlined />}
-          onClick={exportSettings}>
-          Export
-        </Button>
-      </Space>
-      <Tabs>
-        <Tabs.TabPane key='tab-alias' tab='Player Aliases'>
-          <PlayerAliases />
-        </Tabs.TabPane>
-        <Tabs.TabPane key='tab-playerListPattern' tab='Player List Patterns'>
-          <PlayerListPatterns />
-        </Tabs.TabPane>
-        <Tabs.TabPane key='tab-vote' tab='Vote Patterns'>
-          <VotePatterns />
-        </Tabs.TabPane>
-        <Tabs.TabPane key='tab-day' tab='Day Transition Patterns'>
-          <DayPatterns />
-        </Tabs.TabPane>
-        <Tabs.TabPane key='tab-night' tab='Night Transition Patterns'>
-          <NightPatterns />
-        </Tabs.TabPane>
-        <Tabs.TabPane key='tab-nightkill' tab='Night Kill Patterns'>
-          <NightKillPatterns />
-        </Tabs.TabPane>
-      </Tabs>
-    </>
+    <Row>
+      <Col style={{width: '80%', minWidth: '800px'}}>
+        <Tabs tabPosition='left'>
+          <Tabs.TabPane key='tab-alias' tab='Player Aliases'>
+            <PlayerAliases />
+          </Tabs.TabPane>
+          <Tabs.TabPane key='tab-playerListPattern' tab='Player List Patterns'>
+            <PlayerListPatterns />
+          </Tabs.TabPane>
+          <Tabs.TabPane key='tab-vote' tab='Vote Patterns'>
+            <VotePatterns />
+          </Tabs.TabPane>
+          <Tabs.TabPane key='tab-day' tab='Day Transition Patterns'>
+            <DayPatterns />
+          </Tabs.TabPane>
+          <Tabs.TabPane key='tab-night' tab='Night Transition Patterns'>
+            <NightPatterns />
+          </Tabs.TabPane>
+          <Tabs.TabPane key='tab-nightkill' tab='Night Kill Patterns'>
+            <NightKillPatterns />
+          </Tabs.TabPane>
+        </Tabs>
+      </Col>
+      <Col style={{marginLeft: 'auto'}}>
+        <input type="file" id="playersFile" ref={fileUploaderRef} onChange={importSettings} style={{ display: "none" }} />
+        <Space style={{ marginBottom: 16 }}>
+          <Button
+            style={{ width: '100px' }}
+            type='primary'
+            icon={<UploadOutlined />}
+            onClick={() => fileUploaderRef.current.click()}>
+            Import
+          </Button>
+          <Button
+            style={{ width: '100px' }}
+            type='primary'
+            icon={<DownloadOutlined />}
+            onClick={exportSettings}>
+            Export
+          </Button>
+        </Space>
+      </Col>
+    </Row>
   );
 };
 
