@@ -1,14 +1,28 @@
 import React, {useEffect, useState, useRef} from 'react';
 // import { useRecoilValue } from 'recoil';
 // import { aliasState } from '../../atoms';
-// import { useVotes } from '../../voteParser';
+import useGameVotes from '../../hooks/useGameVotes';
 // import DataGrid from '../../components/DataGrid';
-import { Tabs } from 'antd';
+import { Tabs, Empty } from 'antd';
+import {selectedGameState} from '../../atoms';
+import { useRecoilValue } from 'recoil';
 // import './Votes.less';
 
 const Votes = () => {
+  const selectedGame = useRecoilValue(selectedGameState);
+  const [gameVotes, loading] = useGameVotes();
+
+  console.log(gameVotes);
+
+  if (!selectedGame) {
+    return null;
+  }
+
   return (
     <>
+      {!gameVotes.length &&
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No game data found.' />
+      }
     </>
       // <Tabs tabPosition='left'>
       //   <Tabs.TabPane key='tab-day1' tab='Day 1'>

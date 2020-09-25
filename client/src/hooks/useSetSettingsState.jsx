@@ -1,7 +1,8 @@
 import { useSetRecoilState } from 'recoil';
 import * as atoms from '../atoms';
 
-const useSetSettingsState = () => {
+export default
+function useSetSettingsState() {
   const setPlayerAliasState = useSetRecoilState(atoms.playerAliasState);
   const setPlayerListPatternState = useSetRecoilState(atoms.playerListPatternState);
   const setVotePatternState = useSetRecoilState(atoms.votePatternState);
@@ -29,5 +30,3 @@ const useSetSettingsState = () => {
 
   return setSettings;
 }
-
-export default useSetSettingsState;

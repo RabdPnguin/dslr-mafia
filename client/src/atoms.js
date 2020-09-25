@@ -62,24 +62,18 @@ export const gamesQuery = selector({
   }
 });
 
-// export const postsQuery = selector({
-//   key: 'game-players',
-//   get: async ({ get }) => {
-//     const id = get(selectedGameState);
-//     if (!id) return waitAndResolve([]);
+export const postsQuery = selector({
+  key: 'game-players',
+  get: async ({ get }) => {
+    const id = get(selectedGameState);
+    if (!id) return [];
 
-//     try {
-//       const result = await axios.get(`/games/${get(selectedGameState)}/players`);
-//       return result.data;
-//     } catch (error) {
-//       console.error(error.response);
-//       return [];
-//     }
-//   }
-// });
-
-// function waitAndResolve(value) {
-//   return new Promise(resolve => {
-//     setTimeout(() => { resolve(value); }, 1);
-//   });
-// }
+    try {
+      const result = await axios.get(`/games/${get(selectedGameState)}/players`);
+      return result.data;
+    } catch (error) {
+      console.error(error.response);
+      return [];
+    }
+  }
+});

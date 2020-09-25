@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Layout, Menu } from 'antd';
-import { ReactComponent as Logo } from './images/secret.svg';
 import { SettingOutlined, TeamOutlined } from '@ant-design/icons';
-import SettingsScene from './Scenes/SettingsScene';
+import { Layout, Menu } from 'antd';
+import React, { useState } from 'react';
+import { ReactComponent as Logo } from './images/secret.svg';
 import GamesScene from './Scenes/GamesScene';
+import SettingsScene from './Scenes/SettingsScene';
 
 const menuItems = {
   '1': {
