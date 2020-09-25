@@ -1,27 +1,35 @@
-import React, {useRef} from 'react';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Space, Tabs } from 'antd';
+import React, { useRef } from 'react';
+import { save } from 'save-file';
+import DayPatterns from './DayPatterns';
+import NightKillPatterns from './NightKillPatterns';
+import NightPatterns from './NightPatterns';
 import PlayerAliases from './PlayerAliases';
 import PlayerListPatterns from './PlayerListPatterns';
-import {Tabs, Space, Button} from 'antd';
-import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-import { save } from 'save-file';
+import VotePatterns from './VotePatterns';
+import useSetSettingsState from '../../hooks/useSetSettingsState';
 
 const SettingsScene = () => {
+  const setSettings = useSetSettingsState();
   const fileUploaderRef = useRef();
 
   const importSettings = event => {
-    // event.stopPropagation();
-    // event.preventDefault();
+    event.stopPropagation();
+    event.preventDefault();
 
-    // const file = event.target.files[0];
-    // const reader = new FileReader();
-    // reader.readAsText(file);
-    // reader.onload = e => {
-    //   setAliases(JSON.parse(e.target.result));
-    // }
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = e => {
+      const settings = JSON.parse(e.target.result);
+      setSettings(settings);
+    }
   };
 
   const exportSettings = async () => {
-    // await save(JSON.stringify(aliases), 'settings.json');
+    const settings = localStorage.getItem('recoil-persist') ?? {};
+    await save(settings, 'settings.json');
   };
 
   return (
@@ -49,6 +57,18 @@ const SettingsScene = () => {
         </Tabs.TabPane>
         <Tabs.TabPane key='tab-playerListPattern' tab='Player List Patterns'>
           <PlayerListPatterns />
+        </Tabs.TabPane>
+        <Tabs.TabPane key='tab-vote' tab='Vote Patterns'>
+          <VotePatterns />
+        </Tabs.TabPane>
+        <Tabs.TabPane key='tab-day' tab='Day Transition Patterns'>
+          <DayPatterns />
+        </Tabs.TabPane>
+        <Tabs.TabPane key='tab-night' tab='Night Transition Patterns'>
+          <NightPatterns />
+        </Tabs.TabPane>
+        <Tabs.TabPane key='tab-nightkill' tab='Night Kill Patterns'>
+          <NightKillPatterns />
         </Tabs.TabPane>
       </Tabs>
     </>

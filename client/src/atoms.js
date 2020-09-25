@@ -2,21 +2,52 @@ import { atom, selector } from 'recoil';
 import axios from 'axios';
 
 export const playerAliasState = atom({
-  key: 'aliases',
+  key: 'playerAlias',
   default: [],
   persistence_UNSTABLE: {
-    type: 'aliases'
+    type: 'playerAlias'
   }
 });
 
 export const playerListPatternState = atom({
-  key: 'playerListPatterns',
+  key: 'playerListPattern',
   default: [],
   persistence_UNSTABLE: {
-    type: 'playerListPatterns'
+    type: 'playerListPattern'
   }
 });
 
+export const votePatternState = atom({
+  key: 'votePattern',
+  default: [],
+  persistence_UNSTABLE: {
+    type: 'votePattern'
+  }
+});
+
+export const dayPatternState = atom({
+  key: 'dayPattern',
+  default: [],
+  persistence_UNSTABLE: {
+    type: 'dayPattern'
+  }
+});
+
+export const nightPatternState = atom({
+  key: 'nightPattern',
+  default: [],
+  persistence_UNSTABLE: {
+    type: 'nightPattern'
+  }
+});
+
+export const nightKillPatternState = atom({
+  key: 'nightKillPattern',
+  default: [],
+  persistence_UNSTABLE: {
+    type: 'nightKillPattern'
+  }
+});
 
 // export const selectedGameState = atom({
 //   key: 'selected-game',

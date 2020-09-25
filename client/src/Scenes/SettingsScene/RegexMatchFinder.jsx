@@ -11,7 +11,7 @@ const AddPattern = ({onAdd, onChange, pattern, ...props}) => (
     <Col flex='auto'>
       <Input
         addonBefore='/'
-        addonAfter="/gmi"
+        addonAfter="/gi"
         placeholder='Regex Pattern'
         value={pattern}
         onChange={e => onChange(e.target.value)} />
