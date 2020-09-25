@@ -33,6 +33,9 @@ class Parser {
     const players = this._parsePlayers(posts[0].post);
 
     let isDay = false;
+    let dayCount = 0;
+    let game = [];
+
     for (let i = 1; i < posts.length; ++i) {
       const name = posts[i].name.toLowerCase().trim();
       const text = this._removeBlockQuotes(posts[i].post);
@@ -40,17 +43,19 @@ class Parser {
       if (name === moderator) {
         if (!isDay && this._parseIsDay(text)) {
           isDay = true;
+          dayCount++;
+          game.push({day: dayCount});
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
         }
       }
     }
     
-    return posts;
+    return game;
   }
 
   _removeBlockQuotes = post => {
-    const $ = cheerio.load(post);
+    const $ = cheerio.load(post, {decodeEntities: false});
     $('.bquote').remove();
     return $.html() ?? '';
   }

@@ -3,7 +3,7 @@ import React, {useEffect, useState, useRef} from 'react';
 // import { aliasState } from '../../atoms';
 import useGameVotes from '../../hooks/useGameVotes';
 // import DataGrid from '../../components/DataGrid';
-import { Tabs, Empty } from 'antd';
+import { Tabs, Empty, Skeleton } from 'antd';
 import {selectedGameState} from '../../atoms';
 import { useRecoilValue } from 'recoil';
 // import './Votes.less';
@@ -18,17 +18,24 @@ const Votes = () => {
     return null;
   }
 
+  if (loading) {
+    return <Skeleton active />;
+  }
+
+  if (!gameVotes.length) {
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No game data found.' />;
+  }
+
   return (
     <>
-      {!gameVotes.length &&
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No game data found.' />
-      }
-    </>
-      // <Tabs tabPosition='left'>
-      //   <Tabs.TabPane key='tab-day1' tab='Day 1'>
+      <Tabs tabPosition='left'>
+        {gameVotes.map(({day}) => (
+          <Tabs.TabPane key={`tab-day${day}`} tab={`Day ${day}`}>
 
-      //   </Tabs.TabPane>
-      // </Tabs>
+          </Tabs.TabPane>))
+        }
+      </Tabs>
+    </>
   );
 };
 
