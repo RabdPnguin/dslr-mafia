@@ -29,7 +29,7 @@ const AddPlayer = ({ onAdd, ...props }) => {
           value={aliases}
           onChange={e => setAliases(e.target.value)} />
       </Col>
-      <Col>
+      <Col style={{marginLeft: '5px'}}>
         <Button
           type='primary'
           disabled={!name}

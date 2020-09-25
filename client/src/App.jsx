@@ -3,7 +3,7 @@ import { Layout, Menu } from 'antd';
 import { ReactComponent as Logo } from './images/secret.svg';
 import { SettingOutlined, TeamOutlined } from '@ant-design/icons';
 import SettingsScene from './Scenes/SettingsScene';
-import GamesScene from './Scenes/GamesScene';
+// import GamesScene from './Scenes/GamesScene';
 
 const menuItems = {
   '1': {
@@ -11,11 +11,11 @@ const menuItems = {
     icon: <SettingOutlined />,
     scene: <SettingsScene />
   },
-  '2': {
-    label: 'Games',
-    icon: <TeamOutlined />,
-    scene: <GamesScene />
-  }
+  // '2': {
+  //   label: 'Games',
+  //   icon: <TeamOutlined />,
+  //   scene: <GamesScene />
+  // }
 }
 
 const App = () => {
