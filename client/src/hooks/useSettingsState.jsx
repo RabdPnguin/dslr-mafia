@@ -5,7 +5,7 @@ export default
 function useSettingsState() {
   const [playerAliases, setPlayerAliasState] = useRecoilState(atoms.playerAliasState);
   const [playerListPatterns, setPlayerListPatternState] = useRecoilState(atoms.playerListPatternState);
-  const [votesPatterns, setVotePatternState] = useRecoilState(atoms.votePatternState);
+  const [votePatterns, setVotePatternState] = useRecoilState(atoms.votePatternState);
   const [dayPatterns, setDayPatternState] = useRecoilState(atoms.dayPatternState);
   const [nightPatterns, setNightPatternState] = useRecoilState(atoms.nightPatternState);
   const [nightKillPatterns, setNightKillPatternState] = useRecoilState(atoms.nightKillPatternState);
@@ -22,7 +22,7 @@ function useSettingsState() {
   const settings = {
     playerAliases,
     playerListPatterns,
-    votesPatterns,
+    votePatterns,
     dayPatterns,
     nightPatterns,
     nightKillPatterns

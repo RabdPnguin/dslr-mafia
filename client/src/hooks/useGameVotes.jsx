@@ -44,14 +44,54 @@ class Parser {
         if (!isDay && this._parseIsDay(text)) {
           isDay = true;
           dayCount++;
-          game.push({day: dayCount});
+          game.push({day: dayCount, players: this._createPlayerList(players)});
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
+        }
+      } else {
+        if (isDay) {
+          const currentDay = game[dayCount - 1];
+          const player = currentDay.players[name];
+          const isValidPlayer = players.includes(name) && !player.isDead;
+
+          if (!isValidPlayer) continue;
+
+          console.log(player);
+          player.vote = this._parsePlayerVote(player, text);
+          currentDay.players[name] = player;
         }
       }
     }
     
     return game;
+  }
+
+  _createPlayerList = players => {
+    return players.reduce((acc, cur) => ({...acc, [cur]: {name: cur, vote: '', isDead: false}}), {});
+  }
+
+  _parsePlayerVote = (player, post) => {
+    const votePattern = this._combinePatterns(this.settings.votePatterns);
+    const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|(?<unvote><b>unvote<\\/b>)`;
+    const pattern = `${votePattern}|${unvotePattern}`;
+    const matches = post.matchAll(new RegExp(pattern, 'gi'));
+
+    let vote = player.vote;
+    for (let match of matches) {
+      const key = Object.keys(match.groups).find(k => match.groups[k]);
+
+      const unvote = key.includes('unvote');
+      const name = (match.groups[key] ?? '').toLowerCase().trim();
+
+      const playerName = this._getPlayerName(name);
+      if (unvote && (playerName === vote || !playerName)) {
+        vote = ''
+      } else if (!unvote && playerName) {
+        vote = playerName
+      }
+    }
+
+    return vote;
   }
 
   _removeBlockQuotes = post => {
@@ -95,11 +135,13 @@ class Parser {
       }
     }
 
-    return players;
+    return players.sort();
   }
 
   _combinePatterns = patterns => {
-    return patterns.map(p => `(${p.pattern})`).join('|');
+    return patterns
+      .map((p, i) => `(${p.pattern})`.replace('?<player>', `?<player${i}>`))
+      .join('|');
   }
 
   _getPlayerName = playerNameOrAlias => {
@@ -111,6 +153,6 @@ class Parser {
       }))
       .find(alias => alias.name === name || alias.aliases.includes(name));
 
-    return alias ?? name;
+    return alias?.name ?? name;
   }
 }
