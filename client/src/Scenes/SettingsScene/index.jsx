@@ -8,10 +8,10 @@ import NightPatterns from './NightPatterns';
 import PlayerAliases from './PlayerAliases';
 import PlayerListPatterns from './PlayerListPatterns';
 import VotePatterns from './VotePatterns';
-import useSetSettingsState from '../../hooks/useSetSettingsState';
+import useSettingsState from '../../hooks/useSettingsState';
 
 const SettingsScene = () => {
-  const setSettings = useSetSettingsState();
+  const [,setSettings] = useSettingsState();
   const fileUploaderRef = useRef();
 
   const importSettings = event => {
