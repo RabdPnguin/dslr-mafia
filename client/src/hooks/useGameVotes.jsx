@@ -46,20 +46,14 @@ class Parser {
     for (let i = 1; i < posts.length; ++i) {
       const name = posts[i].name.toLowerCase().trim();
       const text = this._removeBlockQuotes(posts[i].post);
-
-      console.log(text);
+      this._calculateDeadPlayers(game, dayCount);
 
       if (name === moderator) {
-        if (isDay) {
-          const dayKill = this._parseDayKill(text);
-          if (dayKill) {
-            nightKills.push(dayKill);
-          }
-        } else if (!isDay) {
-          const nightKill = this._parseNightKill(text);
-          if (nightKill) {
-            nightKills.push(nightKill);
-          }
+        const deaths = isDay
+          ? this._parseDayKill(text)
+          : this._parseNightKill(text);
+        if (deaths) {
+          nightKills.push(deaths);
         }
 
         if (!isDay && this._parseIsDay(text)) {
@@ -76,8 +70,6 @@ class Parser {
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
         }
-
-        this._calculateDeadPlayers(game, dayCount);
       } else {
         if (isDay) {
           const currentDay = game[dayCount - 1];
@@ -106,6 +98,7 @@ class Parser {
       }
     }
 
+    this._calculateDeadPlayers(game, dayCount);
     return game.map(g => ({
       ...g,
       players: Object.values(g.players).map(v => v)
