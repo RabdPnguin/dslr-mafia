@@ -2,11 +2,24 @@ import React, {useEffect, useState, useRef} from 'react';
 // import { useRecoilValue } from 'recoil';
 // import { aliasState } from '../../atoms';
 import useGameVotes from '../../hooks/useGameVotes';
-// import DataGrid from '../../components/DataGrid';
+import DataGrid from '../../components/DataGrid';
 import { Tabs, Empty, Skeleton } from 'antd';
 import {selectedGameState} from '../../atoms';
 import { useRecoilValue } from 'recoil';
 // import './Votes.less';
+
+const columns = [{
+  title: 'Player',
+  dataIndex: 'name',
+  width: 200
+}, {
+  title: 'Vote',
+  dataIndex: 'vote',
+  width: 200
+}, {
+  title: 'Formatted',
+  dataIndex: 'formatted'
+}];
 
 const Votes = () => {
   const selectedGame = useRecoilValue(selectedGameState);
@@ -29,28 +42,19 @@ const Votes = () => {
   return (
     <>
       <Tabs tabPosition='left'>
-        {gameVotes.map(({day}) => (
+        {gameVotes.map(({day, players}) => (
           <Tabs.TabPane key={`tab-day${day}`} tab={`Day ${day}`}>
-
+             <DataGrid
+               loading={loading}
+               columns={columns}
+               dataSource={players}
+               rowKey='name' />
           </Tabs.TabPane>))
         }
       </Tabs>
     </>
   );
 };
-
-// const rawDataColumns = [{
-//   title: 'Player',
-//   dataIndex: 'player',
-//   width: 200
-// }, {
-//   title: 'Vote',
-//   dataIndex: 'vote',
-//   width: 200
-// }, {
-//   title: 'Formatted',
-//   dataIndex: 'formatted'
-// }];
 
 // const Votes = () => {
 //   const [players, rawVotes, rawDeadPlayers, loading] = useVotes();

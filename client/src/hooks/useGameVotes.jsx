@@ -50,24 +50,69 @@ class Parser {
         }
       } else {
         if (isDay) {
+          this._calculateDeadPlayers(game, dayCount);
+
           const currentDay = game[dayCount - 1];
           const player = currentDay.players[name];
           const isValidPlayer = players.includes(name) && !player.isDead;
-
           if (!isValidPlayer) continue;
 
-          console.log(player);
-          player.vote = this._parsePlayerVote(player, text);
+          const currentVote = player.vote;
+          const newVote = this._parsePlayerVote(player, text);
+          if (currentVote !== newVote) {
+            if (currentVote && currentDay.players[currentVote]) {
+              currentDay.players[currentVote].votesFrom =
+                currentDay.players[currentVote].votesFrom.filter(v => v !== player.name);
+            }
+
+            if (newVote && currentDay.players[newVote]) {
+              currentDay.players[newVote].votesFrom.push(player.name);
+            }
+
+            player.vote = newVote;
+          }
+
           currentDay.players[name] = player;
         }
       }
     }
+
+    return game.map(g => ({
+      ...g,
+      players: Object.values(g.players).map(v => v)
+    }));
+  }
+
+  _calculateDeadPlayers = (game, day) => {
+    const currentDay = day - 1;
+    if (currentDay === 0) return;
     
-    return game;
+    for (let i = 1; i <= currentDay; ++i) {
+      const players = Object.values(game[i].players);
+      const yesterday = Object.values(game[i-1].players);
+      
+      for (let player of players) {
+        if (yesterday.find(p => p.name === player.name).isDead) {
+          player.isDead = true;
+          continue;
+        }
+
+        const numActivePlayers = yesterday.filter(p => !p.isDead).length;
+        const votesToLynch = Math.ceil(numActivePlayers / 2);
+        if (yesterday.find(p => p.name === player.name).votesFrom.length >= votesToLynch) {
+          player.isDead = true;
+          continue;
+        }
+      }
+    }
   }
 
   _createPlayerList = players => {
-    return players.reduce((acc, cur) => ({...acc, [cur]: {name: cur, vote: '', isDead: false}}), {});
+    return players.reduce((acc, cur) => ({...acc, [cur]: {
+      name: cur, 
+      vote: '',
+      votesFrom: [],
+      isDead: false}}), {});
   }
 
   _parsePlayerVote = (player, post) => {
