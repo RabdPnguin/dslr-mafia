@@ -1,5 +1,5 @@
 import { Button, Empty, Skeleton, Tabs } from 'antd';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useEffect, useState } from 'react';
 import useClipboard from 'react-use-clipboard';
 import { useRecoilValue } from 'recoil';
 import { selectedGameState } from '../../atoms';
@@ -13,9 +13,13 @@ const Votes = () => {
   const [selectedTab, setSelectedTab] = useState('tab-day1');
   const [formattedVotes, setFormattedVotes] = useState('');
 
+  useEffect(() => {
+    setSelectedTab('tab-day1');
+  }, [selectedGame]);
+
   useLayoutEffect(() => {
     if (gameVotes?.length) {
-      const day = +selectedTab.replace('tab-day', '');
+      const day = +selectedTab.replace('tab-day', '') - 1;
       setFormattedVotes(gameVotes[day].players
         .filter(p => p.formattedString)
         .map(p => p.formattedString)

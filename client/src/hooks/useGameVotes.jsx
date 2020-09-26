@@ -35,6 +35,7 @@ class Parser {
     let isDay = false;
     let dayCount = 0;
     let game = [];
+    let nightKills = [];
 
     for (let i = 1; i < posts.length; ++i) {
       const name = posts[i].name.toLowerCase().trim();
@@ -45,13 +46,24 @@ class Parser {
           isDay = true;
           dayCount++;
           game.push({day: dayCount, players: this._createPlayerList(players)});
+          for (let nightKill of nightKills) {
+            game[dayCount - 1].players[nightKill].isDead = true;
+          }
+          nightKills = [];
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
+        }
+
+        if (!isDay) {
+          const nightKill = this._parseNightKill(text);
+          console.log(nightKill);
+          if (nightKill) {
+            nightKills.push(nightKill);
+          }
         }
       } else {
         if (isDay) {
           this._calculateDeadPlayers(game, dayCount);
-
           const currentDay = game[dayCount - 1];
           const player = currentDay.players[name];
           const isLynch = this._calculateIsLynch(Object.values(currentDay.players));
@@ -82,6 +94,19 @@ class Parser {
       ...g,
       players: Object.values(g.players).map(v => v)
     }));
+  }
+
+  _parseNightKill = post => {
+    const pattern = this._combinePatterns(this.settings.nightKillPatterns);
+    const matches = post.matchAll(new RegExp(pattern, 'gi'));
+    console.log({pattern, post})
+    for (let match of matches) {
+      const key = Object.keys(match.groups).find(k => match.groups[k]);
+      const name = (match.groups[key] ?? '').toLowerCase().trim();
+      return this._getPlayerName(name);
+    }
+
+    return '';
   }
 
   _calculateIsLynch = players => {
@@ -141,6 +166,7 @@ class Parser {
     let vote = player.vote;
     for (let match of matches) {
       const key = Object.keys(match.groups).find(k => match.groups[k]);
+      if (!key) continue;
 
       const unvote = key.includes('unvote');
       const name = (match.groups[key] ?? '').toLowerCase().trim();
@@ -177,6 +203,10 @@ class Parser {
     const regex = new RegExp(pattern, 'gi');
 
     const match = regex.exec(post);
+    if (!match || !match[0]) {
+      return [];
+    }
+
     const parsedPlayers = post
       .substr(match.index + match[0].length)
       .split(/\r?\n/);
