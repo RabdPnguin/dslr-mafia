@@ -56,7 +56,6 @@ class Parser {
           const player = currentDay.players[name];
           const isLynch = this._calculateIsLynch(Object.values(currentDay.players));
           const isValidPlayer = players.includes(name) && !player.isDead && !isLynch;
-          console.log({name: player.name, isLynch});
           if (!isValidPlayer) continue;
 
           const currentVote = player.vote;
@@ -113,13 +112,14 @@ class Parser {
             }
         }
 
-        const numActivePlayers = players.filter(p => !p.isDead).length;
-        const votesToLynch = Math.ceil(numActivePlayers / 2);
-        const formattedVotes = player.votesFrom.length
-          ? <span><b>{player.name}</b> -{player.votesFrom.length}- <i>{player.votesFrom.join(', ')}</i> {`(L-${votesToLynch - player.votesFrom.length})`}</span>
-          : null;
-
-        player.formatted = formattedVotes;
+        player.formatted = null;
+        player.formattedString = null;
+        if (player.votesFrom.length) {
+          const numActivePlayers = players.filter(p => !p.isDead).length;
+          const votesToLynch = Math.ceil(numActivePlayers / 2);
+          player.formatted = <span><b>{player.name}</b> -{player.votesFrom.length}- <i>{player.votesFrom.join(', ')}</i> {`(L-${votesToLynch - player.votesFrom.length})`}</span>;
+          player.formattedString = `<span><b>${player.name}</b> -${player.votesFrom.length}- <i>${player.votesFrom.join(', ')}</i> (L-${votesToLynch - player.votesFrom.length})</span>`;
+        }
       }
     }
   }
