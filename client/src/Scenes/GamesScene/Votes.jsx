@@ -6,7 +6,7 @@ import DataGrid from '../../components/DataGrid';
 import { Tabs, Empty, Skeleton } from 'antd';
 import {selectedGameState} from '../../atoms';
 import { useRecoilValue } from 'recoil';
-// import './Votes.less';
+import './Votes.less';
 
 const columns = [{
   title: 'Player',
@@ -45,6 +45,7 @@ const Votes = () => {
         {gameVotes.map(({day, players}) => (
           <Tabs.TabPane key={`tab-day${day}`} tab={`Day ${day}`}>
              <DataGrid
+               rowClassName={record => record.isDead ? 'dead-player' : ''}
                loading={loading}
                columns={columns}
                dataSource={players}
