@@ -32,16 +32,30 @@ class Parser {
     const moderator = posts[0].name.toLowerCase().trim();
     const players = this._parsePlayers(posts[0].post);
 
-    let isDay = false;
-    let dayCount = 0;
     let game = [];
     let nightKills = [];
+    let dayCount = 0;
+    let isDay = false;
+    
+    if (this._parseIsDay(posts[0].post)) {
+      isDay = true;
+      dayCount++;
+      game.push({day: dayCount, players: this._createPlayerList(players)});
+    }
 
     for (let i = 1; i < posts.length; ++i) {
       const name = posts[i].name.toLowerCase().trim();
       const text = this._removeBlockQuotes(posts[i].post);
 
       if (name === moderator) {
+        if (!isDay) {
+          const nightKill = this._parseNightKill(text);
+          console.log(nightKill);
+          if (nightKill) {
+            nightKills.push(nightKill);
+          }
+        }
+
         if (!isDay && this._parseIsDay(text)) {
           isDay = true;
           dayCount++;
@@ -52,14 +66,6 @@ class Parser {
           nightKills = [];
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
-        }
-
-        if (!isDay) {
-          const nightKill = this._parseNightKill(text);
-          console.log(nightKill);
-          if (nightKill) {
-            nightKills.push(nightKill);
-          }
         }
       } else {
         if (isDay) {
