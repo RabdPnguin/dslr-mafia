@@ -54,7 +54,9 @@ class Parser {
 
           const currentDay = game[dayCount - 1];
           const player = currentDay.players[name];
-          const isValidPlayer = players.includes(name) && !player.isDead;
+          const isLynch = this._calculateIsLynch(Object.values(currentDay.players));
+          const isValidPlayer = players.includes(name) && !player.isDead && !isLynch;
+          console.log({name: player.name, isLynch});
           if (!isValidPlayer) continue;
 
           const currentVote = player.vote;
@@ -81,6 +83,12 @@ class Parser {
       ...g,
       players: Object.values(g.players).map(v => v)
     }));
+  }
+
+  _calculateIsLynch = players => {
+    const numActivePlayers = players.filter(p => !p.isDead).length;
+    const votesToLynch = Math.ceil(numActivePlayers / 2);
+    return players.some(p => p.votesFrom.length >= votesToLynch);
   }
 
   _calculateDeadPlayers = (game, day) => {
