@@ -1,14 +1,15 @@
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Space, Tabs, Row, Col } from 'antd';
+import { Button, Space, Tabs } from 'antd';
 import React, { useRef } from 'react';
 import { save } from 'save-file';
+import useSettingsState from '../../hooks/useSettingsState';
+import DayKillPatterns from './DayKillPatterns';
 import DayPatterns from './DayPatterns';
 import NightKillPatterns from './NightKillPatterns';
 import NightPatterns from './NightPatterns';
 import PlayerAliases from './PlayerAliases';
 import PlayerListPatterns from './PlayerListPatterns';
 import VotePatterns from './VotePatterns';
-import useSettingsState from '../../hooks/useSettingsState';
 
 const SettingsScene = () => {
   const [,setSettings] = useSettingsState();
@@ -63,6 +64,9 @@ const SettingsScene = () => {
         </Tabs.TabPane>
         <Tabs.TabPane key='tab-day' tab='Day Transition Patterns'>
           <DayPatterns />
+        </Tabs.TabPane>
+        <Tabs.TabPane key='tab-daykill' tab='Day Kill Patterns'>
+          <DayKillPatterns />
         </Tabs.TabPane>
         <Tabs.TabPane key='tab-night' tab='Night Transition Patterns'>
           <NightPatterns />

@@ -47,10 +47,16 @@ class Parser {
       const name = posts[i].name.toLowerCase().trim();
       const text = this._removeBlockQuotes(posts[i].post);
 
+      console.log(text);
+
       if (name === moderator) {
-        if (!isDay) {
+        if (isDay) {
+          const dayKill = this._parseDayKill(text);
+          if (dayKill) {
+            nightKills.push(dayKill);
+          }
+        } else if (!isDay) {
           const nightKill = this._parseNightKill(text);
-          console.log(nightKill);
           if (nightKill) {
             nightKills.push(nightKill);
           }
@@ -61,15 +67,19 @@ class Parser {
           dayCount++;
           game.push({day: dayCount, players: this._createPlayerList(players)});
           for (let nightKill of nightKills) {
-            game[dayCount - 1].players[nightKill].isDead = true;
+            const player = game[dayCount - 1].players[nightKill];
+            if (player) {
+              player.isDead = true;
+            }
           }
           nightKills = [];
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
         }
+
+        this._calculateDeadPlayers(game, dayCount);
       } else {
         if (isDay) {
-          this._calculateDeadPlayers(game, dayCount);
           const currentDay = game[dayCount - 1];
           const player = currentDay.players[name];
           const isLynch = this._calculateIsLynch(Object.values(currentDay.players));
@@ -102,10 +112,21 @@ class Parser {
     }));
   }
 
+  _parseDayKill = post => {
+    const pattern = this._combinePatterns(this.settings.dayKillPatterns);
+    const matches = post.matchAll(new RegExp(pattern, 'gi'));
+    for (let match of matches) {
+      const key = Object.keys(match.groups).find(k => match.groups[k]);
+      const name = (match.groups[key] ?? '').toLowerCase().trim();
+      return this._getPlayerName(name);
+    }
+
+    return '';
+  }
+
   _parseNightKill = post => {
     const pattern = this._combinePatterns(this.settings.nightKillPatterns);
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
-    console.log({pattern, post})
     for (let match of matches) {
       const key = Object.keys(match.groups).find(k => match.groups[k]);
       const name = (match.groups[key] ?? '').toLowerCase().trim();
@@ -134,13 +155,7 @@ class Parser {
         if (i > 0) {
           if (yesterday.find(p => p.name === player.name).isDead) {
               player.isDead = true;
-            } else {
-              const numActivePlayers = yesterday.filter(p => !p.isDead).length;
-              const votesToLynch = Math.ceil(numActivePlayers / 2);
-              if (yesterday.find(p => p.name === player.name).votesFrom.length >= votesToLynch) {
-                player.isDead = true;
-              }
-            }
+            } 
         }
 
         player.formatted = null;
