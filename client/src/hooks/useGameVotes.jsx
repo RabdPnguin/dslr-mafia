@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecoilValueLoadable } from 'recoil';
 import { postsQuery } from '../atoms';
 import useSettingsState from '../hooks/useSettingsState';
@@ -93,24 +93,33 @@ class Parser {
 
   _calculateDeadPlayers = (game, day) => {
     const currentDay = day - 1;
-    if (currentDay === 0) return;
     
-    for (let i = 1; i <= currentDay; ++i) {
+    for (let i = 0; i <= currentDay; ++i) {
       const players = Object.values(game[i].players);
-      const yesterday = Object.values(game[i-1].players);
+      const yesterday = i > 0 
+        ? Object.values(game[i-1].players)
+        : [];
       
       for (let player of players) {
-        if (yesterday.find(p => p.name === player.name).isDead) {
-          player.isDead = true;
-          continue;
+        if (i > 0) {
+          if (yesterday.find(p => p.name === player.name).isDead) {
+              player.isDead = true;
+            } else {
+              const numActivePlayers = yesterday.filter(p => !p.isDead).length;
+              const votesToLynch = Math.ceil(numActivePlayers / 2);
+              if (yesterday.find(p => p.name === player.name).votesFrom.length >= votesToLynch) {
+                player.isDead = true;
+              }
+            }
         }
 
-        const numActivePlayers = yesterday.filter(p => !p.isDead).length;
+        const numActivePlayers = players.filter(p => !p.isDead).length;
         const votesToLynch = Math.ceil(numActivePlayers / 2);
-        if (yesterday.find(p => p.name === player.name).votesFrom.length >= votesToLynch) {
-          player.isDead = true;
-          continue;
-        }
+        const formattedVotes = player.votesFrom.length
+          ? <span><b>{player.name}</b> -{player.votesFrom.length}- <i>{player.votesFrom.join(', ')}</i> {`(L-${votesToLynch - player.votesFrom.length})`}</span>
+          : null;
+
+        player.formatted = formattedVotes;
       }
     }
   }
