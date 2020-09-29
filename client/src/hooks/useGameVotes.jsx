@@ -150,15 +150,6 @@ class Parser {
               player.isDead = true;
             } 
         }
-
-        player.formatted = null;
-        player.formattedString = null;
-        if (player.votesFrom.length) {
-          const numActivePlayers = players.filter(p => !p.isDead).length;
-          const votesToLynch = Math.ceil(numActivePlayers / 2);
-          player.formatted = <span><b>{player.name}</b> -{player.votesFrom.length}- <i>{player.votesFrom.join(', ')}</i> {`(L-${votesToLynch - player.votesFrom.length})`}</span>;
-          player.formattedString = `<span><b>${player.name}</b> -${player.votesFrom.length}- <i>${player.votesFrom.join(', ')}</i> (L-${votesToLynch - player.votesFrom.length})</span>`;
-        }
       }
     }
   }
@@ -173,7 +164,7 @@ class Parser {
 
   _parsePlayerVote = (player, post) => {
     const votePattern = this._combinePatterns(this.settings.votePatterns);
-    const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|<b> *?(?<unvote>unvote) *?<\\/b>`;
+    const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|<b> *?(?<unvote>unvote)<\\/b>`;
     const pattern = `${votePattern}|${unvotePattern}`;
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
 
