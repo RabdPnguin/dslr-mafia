@@ -79,7 +79,7 @@ class Parser {
           if (!isValidPlayer) continue;
 
           const currentVote = player.vote;
-          const newVote = this._parsePlayerVote(player, text);
+          const [newVote, isValidVote] = this._parsePlayerVote(currentDay.players, player, text);
           if (currentVote !== newVote) {
             if (currentVote && currentDay.players[currentVote]) {
               currentDay.players[currentVote].votesFrom =
@@ -91,6 +91,7 @@ class Parser {
             }
 
             player.vote = newVote;
+            player.isValidVote = isValidVote;
           }
 
           currentDay.players[name] = player;
@@ -158,17 +159,20 @@ class Parser {
     return players.reduce((acc, cur) => ({...acc, [cur]: {
       name: cur, 
       vote: '',
+      isValidVote: true,
       votesFrom: [],
       isDead: false}}), {});
   }
 
-  _parsePlayerVote = (player, post) => {
+  _parsePlayerVote = (players, player, post) => {
     const votePattern = this._combinePatterns(this.settings.votePatterns);
     const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|<b> *?(?<unvote>unvote)<\\/b>`;
     const pattern = `${votePattern}|${unvotePattern}`;
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
 
     let vote = player.vote;
+    let isValidVote = false;
+
     for (let match of matches) {
       const key = Object.keys(match.groups).find(k => match.groups[k]);
       if (!key) continue;
@@ -176,16 +180,19 @@ class Parser {
       const unvote = key.includes('unvote');
       const withPlayer = key.includes('player');
       const name = (match.groups[key] ?? '').toLowerCase().trim();
-
       const playerName = this._getPlayerName(name);
+
       if (unvote && ((!withPlayer) || (withPlayer && playerName === vote))) {
         vote = ''
+        isValidVote = true;
       } else if (!unvote && playerName) {
         vote = playerName
+        console.log({name: player.name, vote, isValidVote});
+        isValidVote = this._isValidPlayerNameOrAlias(name) || Object.keys(players).some(p => p === name);
       }
     }
 
-    return vote;
+    return [vote, isValidVote];
   }
 
   _removeBlockQuotes = post => {
@@ -240,6 +247,19 @@ class Parser {
     return patterns
       .map((p, i) => `(${p.pattern})`.replace('?<player>', `?<player${i}>`))
       .join('|');
+  }
+
+  _isValidPlayerNameOrAlias = playerNameOrAlias => {
+    const name = playerNameOrAlias.toLowerCase().trim();
+    const alias = this.settings.playerAliases
+      .map(alias => ({
+        name: alias.name.toLowerCase().trim(),
+        aliases: alias.aliases.split(',').map(a => a.toLowerCase().trim())
+      }))
+      .find(alias => alias.name === name || alias.aliases.includes(name));
+
+    console.log({playerNameOrAlias, settings: this.settings.playerAliases});
+    return !!alias;
   }
 
   _getPlayerName = playerNameOrAlias => {

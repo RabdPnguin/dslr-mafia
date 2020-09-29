@@ -39,7 +39,7 @@ const Votes = () => {
             newFormattedVotes.push(`<b>${player.name}</b> -${player.votesFrom.length}- <i>${player.votesFrom.join(', ')}</i> (L-${votesToLynch - player.votesFrom.length})`)
           }
           
-          if (!player.vote) {
+          if (!player.vote || !player.isValidVote) {
             notVoting.push(player.name);
           }
         }
