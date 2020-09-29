@@ -173,7 +173,7 @@ class Parser {
 
   _parsePlayerVote = (player, post) => {
     const votePattern = this._combinePatterns(this.settings.votePatterns);
-    const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|<b>(?<unvote>unvote)<\\/b>`;
+    const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|<b> *?(?<unvote>unvote) *?<\\/b>`;
     const pattern = `${votePattern}|${unvotePattern}`;
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
 
