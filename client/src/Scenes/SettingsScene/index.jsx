@@ -1,6 +1,6 @@
-import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Space, Tabs } from 'antd';
-import React, { useRef } from 'react';
+import { DownloadOutlined, GithubOutlined, UploadOutlined, SmileOutlined } from '@ant-design/icons';
+import { Button, Space, Tabs, notification } from 'antd';
+import React, { useRef, useState, useEffect } from 'react';
 import { save } from 'save-file';
 import useSettingsState from '../../hooks/useSettingsState';
 import DayKillPatterns from './DayKillPatterns';
@@ -14,6 +14,26 @@ import VotePatterns from './VotePatterns';
 const SettingsScene = () => {
   const [,setSettings] = useSettingsState();
   const fileUploaderRef = useRef();
+  
+  const [imported, setImported] = useState(false);
+  useEffect(() => {
+    if (imported) {
+      setImported(false);
+      notification.open({
+        message: 'Settings imported successfully!',
+        icon: <SmileOutlined />
+      });
+    }
+  }, [imported]);
+
+  const loadDefaults = () => {
+    fetch('https://gist.githubusercontent.com/RabdPnguin/fe9ade0e7498bd3eb144248f4af7d3cc/raw/26c0d54ebbb06baa6ed2c94d6400c4cf314501c8/settings.json')
+      .then(response => response.json())
+      .then(json => {
+        setSettings(json);
+        setImported(true);
+      });
+  };
 
   const importSettings = event => {
     event.stopPropagation();
@@ -50,6 +70,13 @@ const SettingsScene = () => {
           icon={<DownloadOutlined />}
           onClick={exportSettings}>
           Export
+        </Button>
+        <Button
+          style={{width: '150px'}}
+          type='secondary'
+          icon={<GithubOutlined />}
+          onClick={loadDefaults}>
+          Load Defaults
         </Button>
       </Space>
       <Tabs tabPosition='left'>
