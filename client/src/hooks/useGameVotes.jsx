@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import cheerio from 'cheerio';
+import { useEffect, useState } from 'react';
 import { useRecoilValueLoadable } from 'recoil';
 import { postsQuery } from '../atoms';
 import useSettingsState from '../hooks/useSettingsState';
-import cheerio from 'cheerio';
 
 export default
 function useGameVotes() {
@@ -16,7 +16,7 @@ function useGameVotes() {
       const parser = new Parser(settings);
       setGameVotes(parser.Parse(posts.contents));
     }
-  }, [loading, posts.contents]);
+  }, [loading, posts.contents, settings]);
 
   return [gameVotes, loading];
 }

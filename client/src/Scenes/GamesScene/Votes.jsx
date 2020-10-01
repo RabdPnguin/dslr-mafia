@@ -1,12 +1,16 @@
-import { Button, Empty, Skeleton, Tabs } from 'antd';
-import React, { useLayoutEffect, useEffect, useState, useRef } from 'react';
+import { DownOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Empty, Skeleton, Tabs, Row, Menu } from 'antd';
+import produce from 'immer';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import useClipboard from 'react-use-clipboard';
 import { useRecoilValue } from 'recoil';
 import { selectedGameState } from '../../atoms';
 import DataGrid from '../../components/DataGrid';
 import useGameVotes from '../../hooks/useGameVotes';
+import { playerAliasState } from '../../atoms';
 import './Votes.less';
-import produce from 'immer';
+import { useRecoilState } from 'recoil';
+import { v4 as uuid } from 'uuid';
 
 const Votes = () => {
   const selectedGame = useRecoilValue(selectedGameState);
@@ -14,12 +18,13 @@ const Votes = () => {
   const [selectedTab, setSelectedTab] = useState('tab-day1');
   const [formattedVotes, setFormattedVotes] = useState('');
   const [displayVotes, setDisplayVotes] = useState([]);
+  const [aliases, setAliases] = useRecoilState(playerAliasState);
 
   useEffect(() => {
     setSelectedTab('tab-day1');
   }, [selectedGame]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setDisplayVotes([]);
     setFormattedVotes([]);
 
@@ -54,6 +59,17 @@ const Votes = () => {
     }
   }, [gameVotes, selectedTab]);
 
+  const updateAliasClicked = alias => ({key: player}) => {
+    if (aliases.some(a => a.name ===  player)) {
+      setAliases(
+        aliases.map(a => a.name === player ? { ...a, aliases: a.aliases + `, ${alias}` } : a)
+      );
+    } else {
+      const newPlayer = {key: uuid(), name: player, aliases: alias};
+      setAliases([...aliases, newPlayer]);
+    }
+  }
+
   const [isCopied, setCopied] = useClipboard(formattedVotes, {
     successDuration: 3000
   });
@@ -77,6 +93,35 @@ const Votes = () => {
   }, {
     title: 'Vote',
     dataIndex: 'vote',
+    render: (text, record) => {
+      if (!text) return null;
+
+      const day = +selectedTab.replace('tab-day', '') - 1;
+      const players = gameVotes[day].players;
+      const isValidVote = players.find(p => p.name === record.name).isValidVote;
+      if (isValidVote) return text;
+
+      return (
+        <Dropdown trigger={['click']} overlay={
+          <Menu onClick={updateAliasClicked(text)}>
+            {
+              players.map(p => (
+                <Menu.Item key={p.name}>
+                  {p.name}
+                </Menu.Item>
+              ))
+            }
+          </Menu>
+        }>
+          <Button style={{width: '100%'}}>
+            <Row style={{alignItems: 'center'}}>
+              <span>{text}</span>
+              <DownOutlined style={{marginLeft: 'auto'}} />
+            </Row>
+          </Button>
+        </Dropdown>
+      );
+    },
     width: 200
   }, {
     title: <Button type='primary' onClick={setCopied}>{isCopied ? 'Votes copied!' : 'Copy to clipboard'}</Button>,
