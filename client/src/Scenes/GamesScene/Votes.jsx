@@ -98,7 +98,7 @@ const Votes = () => {
 
       const day = +selectedTab.replace('tab-day', '') - 1;
       const players = gameVotes[day].players;
-      const isValidVote = players.find(p => p.name === record.name).isValidVote;
+      const isValidVote = !!players.find(p => p.name === record.name)?.isValidVote;
       if (isValidVote) return text;
 
       return (
