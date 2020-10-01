@@ -21,7 +21,7 @@ const SettingsScene = () => {
       setImported(false);
       notification.open({
         message: 'Settings imported successfully!',
-        icon: <SmileOutlined />
+        icon: <SmileOutlined style={{color: 'green'}} />
       });
     }
   }, [imported]);

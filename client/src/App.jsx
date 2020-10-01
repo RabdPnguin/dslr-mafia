@@ -1,9 +1,10 @@
-import { SettingOutlined, TeamOutlined } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
-import React, { useState } from 'react';
+import { SettingOutlined, TeamOutlined, FrownOutlined } from '@ant-design/icons';
+import { Layout, Menu, notification } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { ReactComponent as Logo } from './images/secret.svg';
 import GamesScene from './Scenes/GamesScene';
 import SettingsScene from './Scenes/SettingsScene';
+import useSettingsState from './hooks/useSettingsState';
 
 const menuItems = {
   '1': {
@@ -19,7 +20,23 @@ const menuItems = {
 }
 
 const App = () => {
+  const [settings] = useSettingsState();
   const [selectedMenuItem, setSelectedMenuItem] = useState('2');
+
+  useEffect(() => {
+    const missingSettings = Object.entries(settings)
+      .filter(([k]) => !k.endsWith('Display'))
+      .filter(([k]) => !settings[k].length);
+
+    if (missingSettings.length && selectedMenuItem !== '1') {
+      setSelectedMenuItem('1');
+      const missingSetting = settings[`${missingSettings[0][0]}Display`];
+      notification.open({
+        message: <span>Missing settings. Please fill in settings for <b>{missingSetting}</b> or Load Defaults.</span>,
+        icon: <FrownOutlined style={{color: 'red'}} />
+      });
+    }
+  }, [settings, selectedMenuItem]);
 
   const selectedMenuItemChanged = ({ key }) => setSelectedMenuItem(key);
 

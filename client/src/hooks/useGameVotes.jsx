@@ -107,6 +107,8 @@ class Parser {
   }
 
   _parseDayKill = post => {
+    if (!this.settings.dayKillPatterns.length) return '';
+
     const pattern = this._combinePatterns(this.settings.dayKillPatterns);
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
     for (let match of matches) {
@@ -119,6 +121,8 @@ class Parser {
   }
 
   _parseNightKill = post => {
+    if (!this.settings.nightKillPatterns.length) return '';
+
     const pattern = this._combinePatterns(this.settings.nightKillPatterns);
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
     for (let match of matches) {
@@ -165,6 +169,8 @@ class Parser {
   }
 
   _parsePlayerVote = (players, player, post) => {
+    if (!this.settings.votePatterns.length) return ['', false];
+
     const votePattern = this._combinePatterns(this.settings.votePatterns);
     const unvotePattern = `${votePattern.replaceAll('vote', 'unvote').replaceAll('?<player', '?<unvote_player')}|<b> *?(?<unvote>unvote)<\\/b>`;
     const pattern = `${votePattern}|${unvotePattern}`;
@@ -187,7 +193,6 @@ class Parser {
         isValidVote = true;
       } else if (!unvote && playerName) {
         vote = playerName
-        console.log({name: player.name, vote, isValidVote});
         isValidVote = this._isValidPlayerNameOrAlias(name) || Object.keys(players).some(p => p === name);
       }
     }
@@ -202,16 +207,20 @@ class Parser {
   }
 
   _parseIsDay = post => {
+    if (!this.settings.dayPatterns.length) return false;
     const pattern = this._combinePatterns(this.settings.dayPatterns);
     return post.search(new RegExp(pattern, 'gi')) !== -1;
   }
 
   _parseIsNight = post => {
+    if (!this.settings.nightPatterns.length) return true;
     const pattern = this._combinePatterns(this.settings.nightPatterns);
     return post.search(new RegExp(pattern, 'gi')) !== -1;
   }
 
   _parsePlayers = post => {
+    if (!this.settings.playerListPatterns.length) return [];
+
     const pattern = this._combinePatterns(this.settings.playerListPatterns);
     const regex = new RegExp(pattern, 'gi');
 
@@ -258,7 +267,6 @@ class Parser {
       }))
       .find(alias => alias.name === name || alias.aliases.includes(name));
 
-    console.log({playerNameOrAlias, settings: this.settings.playerAliases});
     return !!alias;
   }
 

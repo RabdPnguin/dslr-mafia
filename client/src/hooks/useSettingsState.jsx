@@ -23,12 +23,19 @@ function useSettingsState() {
 
   const settings = {
     playerAliases,
+    playerAliasesDisplay: 'Player Aliases',
     playerListPatterns,
+    playerListPatternsDisplay: 'Player List Patterns',
     votePatterns,
+    votePatternsDisplay: 'Vote Patterns',
     dayPatterns,
+    dayPatternsDisplay: 'Day Patterns',
     dayKillPatterns,
+    dayKillPatternsDisplay: 'Day Kill Patterns',
     nightPatterns,
-    nightKillPatterns
+    nightPatternsDisplay: 'Night Patterns',
+    nightKillPatterns,
+    nightKillPatternsDisplay: 'Night Kill Patterns',
   };
 
   const setSettings = settings => {
