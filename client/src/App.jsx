@@ -26,7 +26,7 @@ const App = () => {
   useEffect(() => {
     const missingSettings = Object.entries(settings)
       .filter(([k]) => !k.endsWith('Display'))
-      .filter(([k]) => !settings[k].length);
+      .filter(([k]) => k !== 'playerAliases' && !settings[k].length);
 
     if (missingSettings.length && selectedMenuItem !== '1') {
       setSelectedMenuItem('1');
