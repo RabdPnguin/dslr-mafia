@@ -32,14 +32,18 @@ const Votes = () => {
       const day = +selectedTab.replace('tab-day', '') - 1;
       let newFormattedVotes = [];
       let notVoting = [];
+      
+      const numActivePlayers = gameVotes[day].players.filter(p => !p.isDead).length;
+      const votesToLynch = Math.ceil(numActivePlayers / 2);
+
+      newFormattedVotes.push(`${votesToLynch} votes needed to lynch\r\n`);
+
       let newDisplayVotes = produce(gameVotes, draft => {
         for (let i = 0; i < gameVotes[day].players.length; ++i) {
           const player = gameVotes[day].players[i];
           if (player.isDead) continue;
 
           if (player.votesFrom.length) {
-            const numActivePlayers = gameVotes[day].players.filter(p => !p.isDead).length;
-            const votesToLynch = Math.ceil(numActivePlayers / 2);
             draft[day].players[i].formatted = <span><b>{player.name}</b> -{player.votesFrom.length}- <i>{player.votesFrom.join(', ')}</i> {`(L-${votesToLynch - player.votesFrom.length})`}</span>;
             newFormattedVotes.push(`<b>${player.name}</b> -${player.votesFrom.length}- <i>${player.votesFrom.join(', ')}</i> (L-${votesToLynch - player.votesFrom.length})`)
           }
@@ -51,8 +55,12 @@ const Votes = () => {
       })
 
       if (notVoting.length) {
-        newFormattedVotes.push(`\r\n<b>Players not voting</b>: <i>${notVoting.join(', ')}</i>`);
-    }
+        if (newFormattedVotes.length > 1) {
+          newFormattedVotes.push('');
+        }
+
+        newFormattedVotes.push(`<b>Players not voting</b>: <i>${notVoting.join(', ')}</i>`);
+      }
 
       setDisplayVotes(newDisplayVotes);
       setFormattedVotes(newFormattedVotes.join('\r\n'));
