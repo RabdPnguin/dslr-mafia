@@ -11,6 +11,7 @@ import { playerAliasState } from '../../atoms';
 import './Votes.less';
 import { useRecoilState } from 'recoil';
 import { v4 as uuid } from 'uuid';
+import {calcVotesToLynch} from '../../helper';
 
 const Votes = () => {
   const selectedGame = useRecoilValue(selectedGameState);
@@ -34,7 +35,7 @@ const Votes = () => {
       let notVoting = [];
       
       const numActivePlayers = gameVotes[day].players.filter(p => !p.isDead).length;
-      const votesToLynch = Math.ceil(numActivePlayers / 2);
+      const votesToLynch = calcVotesToLynch(numActivePlayers);
 
       newFormattedVotes.push(`${votesToLynch} votes needed to lynch\r\n`);
 

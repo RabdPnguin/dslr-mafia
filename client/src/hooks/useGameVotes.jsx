@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValueLoadable } from 'recoil';
 import { postsQuery } from '../atoms';
 import useSettingsState from '../hooks/useSettingsState';
+import {calcVotesToLynch} from '../helper';
 
 export default
 function useGameVotes() {
@@ -136,7 +137,7 @@ class Parser {
 
   _calculateIsLynch = players => {
     const numActivePlayers = players.filter(p => !p.isDead).length;
-    const votesToLynch = Math.ceil(numActivePlayers / 2);
+    const votesToLynch = calcVotesToLynch(numActivePlayers);
     return players.some(p => p.votesFrom.length >= votesToLynch);
   }
 
