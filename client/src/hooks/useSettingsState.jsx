@@ -8,9 +8,8 @@ function useSettingsState() {
   const [playerListPatterns, setPlayerListPatternState] = useRecoilState(atoms.playerListPatternState);
   const [votePatterns, setVotePatternState] = useRecoilState(atoms.votePatternState);
   const [dayPatterns, setDayPatternState] = useRecoilState(atoms.dayPatternState);
-  const [dayKillPatterns, setDayKillPatternState] = useRecoilState(atoms.dayKillPatternState);
   const [nightPatterns, setNightPatternState] = useRecoilState(atoms.nightPatternState);
-  const [nightKillPatterns, setNightKillPatternState] = useRecoilState(atoms.nightKillPatternState);
+  const [killPatterns, setKillPatternState] = useRecoilState(atoms.killPatternState);
 
   const [settings, setSettings] = useState({
     playerAliases,
@@ -21,12 +20,10 @@ function useSettingsState() {
     votePatternsDisplay: 'Vote Patterns',
     dayPatterns,
     dayPatternsDisplay: 'Day Patterns',
-    dayKillPatterns,
-    dayKillPatternsDisplay: 'Day Kill Patterns',
     nightPatterns,
     nightPatternsDisplay: 'Night Patterns',
-    nightKillPatterns,
-    nightKillPatternsDisplay: 'Night Kill Patterns',
+    killPatterns,
+    killPatternsDisplay: 'Kill Patterns',
   });
 
   useEffect(() => {
@@ -36,20 +33,18 @@ function useSettingsState() {
       playerListPatterns,
       votePatterns,
       dayPatterns,
-      dayKillPatterns,
       nightPatterns,
-      nightKillPatterns,
+      killPatterns,
     }));
-  }, [playerAliases, playerListPatterns, votePatterns, dayPatterns, dayKillPatterns, nightPatterns, nightKillPatterns]);
+  }, [playerAliases, playerListPatterns, votePatterns, dayPatterns, nightPatterns, killPatterns]);
 
   const setSettingFunctions = {
     setPlayerAliasState,
     setPlayerListPatternState,
     setVotePatternState,
     setDayPatternState,
-    setDayKillPatternState,
     setNightPatternState,
-    setNightKillPatternState
+    setKillPatternState
   };
 
   const setAllSettings = settings => {

@@ -119,9 +119,9 @@ class Parser {
   }
 
   _parseDayKill = post => {
-    if (!this.settings.dayKillPatterns.length) return '';
+    if (!this.settings.killPatterns.length) return '';
 
-    const pattern = this._combinePatterns(this.settings.dayKillPatterns);
+    const pattern = this._combinePatterns(this.settings.killPatterns);
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
     for (let match of matches) {
       const key = Object.keys(match.groups).find(k => match.groups[k]);
@@ -133,9 +133,9 @@ class Parser {
   }
 
   _parseNightKill = post => {
-    if (!this.settings.nightKillPatterns.length) return '';
+    if (!this.settings.killPatterns.length) return '';
 
-    const pattern = this._combinePatterns(this.settings.nightKillPatterns);
+    const pattern = this._combinePatterns(this.settings.killPatterns);
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
     for (let match of matches) {
       const key = Object.keys(match.groups).find(k => match.groups[k]);

@@ -33,14 +33,6 @@ export const dayPatternState = atom({
   }
 });
 
-export const dayKillPatternState = atom({
-  key: 'dayKillPattern',
-  default: [],
-  persistence_UNSTABLE: {
-    type: 'dayKillPattern'
-  }
-});
-
 export const nightPatternState = atom({
   key: 'nightPattern',
   default: [],
@@ -49,11 +41,11 @@ export const nightPatternState = atom({
   }
 });
 
-export const nightKillPatternState = atom({
-  key: 'nightKillPattern',
+export const killPatternState = atom({
+  key: 'killPattern',
   default: [],
   persistence_UNSTABLE: {
-    type: 'nightKillPattern'
+    type: 'killPattern'
   }
 });
 
