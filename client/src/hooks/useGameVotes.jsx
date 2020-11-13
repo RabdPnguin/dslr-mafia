@@ -50,24 +50,35 @@ class Parser {
       this._calculateDeadPlayers(game, dayCount);
 
       if (name === moderator) {
-        const deaths = isDay
-          ? this._parseDayKill(text)
-          : this._parseNightKill(text);
-        if (deaths) {
-          nightKills.push(deaths);
+        // const death = isDay
+        //   ? this._parseDayKill(text)
+        //   : this._parseNightKill(text);
+
+        if (isDay) {
+          const death = this._parseDayKill(text);
+          const player = game[dayCount - 1].players[death];
+          if (player) {
+            player.isDead = true;
+          }
         }
+        // const deaths = isDay
+        //   ? this._parseDayKill(text)
+        //   : this._parseNightKill(text);
+        // if (deaths) {
+        //   nightKills.push(deaths);
+        // }
 
         if (!isDay && this._parseIsDay(text)) {
           isDay = true;
           dayCount++;
           game.push({day: dayCount, players: this._createPlayerList(players)});
-          for (let nightKill of nightKills) {
-            const player = game[dayCount - 1].players[nightKill];
-            if (player) {
-              player.isDead = true;
-            }
-          }
-          nightKills = [];
+          // for (let nightKill of nightKills) {
+          //   const player = game[dayCount - 1].players[nightKill];
+          //   if (player) {
+          //     player.isDead = true;
+          //   }
+          // }
+          // nightKills = [];
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
         }
