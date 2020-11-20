@@ -27,7 +27,7 @@ const AddPattern = ({onAdd, onChange, pattern, ...props}) => (
   </Row>
 );
 
-const RegexMatchFinder = ({patternState}) => {
+const RegexMatchFinder = ({patternState, columns = [], dataSource = []}) => {
   const [patterns, setPatterns] = useRecoilState(patternState);
   const [pattern, setPattern] = useState('');
 
@@ -47,20 +47,22 @@ const RegexMatchFinder = ({patternState}) => {
     setPatterns(patterns.filter(p => p.key !== key));
   };
 
-  const columns = [{
+  const regexColumn = {
     title: 'Regex Pattern',
     dataIndex: 'pattern',
     editable: true,
-    width: '100%'
-  }, {
+  };
+
+  const deleteColumn = {
     key: 'x',
     align: 'right',
+    width: '5%',
     render: (text, record) => (
         <Popconfirm title={`Delete ${record.pattern}?`} onConfirm={() => patternDeleted(record.key)}>
           <a>Delete</a>
         </Popconfirm>
       )
-  }];
+  };
 
   return (
     <Row>
@@ -71,8 +73,8 @@ const RegexMatchFinder = ({patternState}) => {
           onChange={setPattern}
           onAdd={patternAdded} />
         <DataGrid
-          columns={columns}
-          dataSource={patterns}
+          columns={[regexColumn, ...columns, deleteColumn]}
+          dataSource={[...patterns, ...dataSource]}
           onChange={patternUpdated} />
       </Col>
     </Row>

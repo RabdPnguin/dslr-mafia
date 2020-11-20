@@ -42,7 +42,6 @@ const Votes = () => {
       let newDisplayVotes = produce(gameVotes, draft => {
         for (let i = 0; i < gameVotes[day].players.length; ++i) {
           const player = gameVotes[day].players[i];
-          if (player.isDead) continue;
 
           if (player.votesFrom.length) {
             draft[day].players[i].formatted = <span><b>{player.name}</b> -{player.votesFrom.length}- <i>{player.votesFrom.join(', ')}</i> {`(L-${votesToLynch - player.votesFrom.length})`}</span>;

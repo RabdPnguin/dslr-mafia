@@ -3,10 +3,9 @@ import { Button, Space, Tabs, notification } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import { save } from 'save-file';
 import useSettingsState from '../../hooks/useSettingsState';
-import DayKillPatterns from './DayKillPatterns';
 import DayPatterns from './DayPatterns';
-import NightKillPatterns from './NightKillPatterns';
 import NightPatterns from './NightPatterns';
+import KillPatterns from './KillPatterns';
 import PlayerAliases from './PlayerAliases';
 import PlayerListPatterns from './PlayerListPatterns';
 import VotePatterns from './VotePatterns';
@@ -27,7 +26,7 @@ const SettingsScene = () => {
   }, [imported]);
 
   const loadDefaults = () => {
-    fetch('https://gist.githubusercontent.com/RabdPnguin/fe9ade0e7498bd3eb144248f4af7d3cc/raw/26c0d54ebbb06baa6ed2c94d6400c4cf314501c8/settings.json')
+    fetch('https://gist.githubusercontent.com/RabdPnguin/fe9ade0e7498bd3eb144248f4af7d3cc/raw/dc04fae6c6b67732be83e34b06bf1a4bbdc25847/settings.json')
       .then(response => response.json())
       .then(json => {
         setSettings(json);
@@ -89,17 +88,14 @@ const SettingsScene = () => {
         <Tabs.TabPane key='tab-vote' tab='Vote Patterns'>
           <VotePatterns />
         </Tabs.TabPane>
+        <Tabs.TabPane key='tab-kill' tab='Kill Patterns'>
+          <KillPatterns />
+        </Tabs.TabPane>
         <Tabs.TabPane key='tab-day' tab='Day Transition Patterns'>
           <DayPatterns />
         </Tabs.TabPane>
-        <Tabs.TabPane key='tab-daykill' tab='Day Kill Patterns'>
-          <DayKillPatterns />
-        </Tabs.TabPane>
         <Tabs.TabPane key='tab-night' tab='Night Transition Patterns'>
           <NightPatterns />
-        </Tabs.TabPane>
-        <Tabs.TabPane key='tab-nightkill' tab='Night Kill Patterns'>
-          <NightKillPatterns />
         </Tabs.TabPane>
       </Tabs>
     </>
