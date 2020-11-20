@@ -33,7 +33,7 @@ class Parser {
     const moderator = posts[0].name.toLowerCase().trim();
     const players = this._parsePlayers(posts[0].post);
 
-    let game = [];
+    const game = [];
     let nightKills = [];
     let dayCount = 0;
     let isDay = false;
@@ -50,48 +50,59 @@ class Parser {
       this._calculateDeadPlayers(game, dayCount);
 
       if (name === moderator) {
-        // const death = isDay
-        //   ? this._parseDayKill(text)
-        //   : this._parseNightKill(text);
+        let shouldResetVotes = false;
 
         if (isDay) {
-          const death = this._parseDayKill(text);
-          const player = game[dayCount - 1].players[death];
-          if (player) {
-            player.isDead = true;
+          const [kills, resetVotes] = this._parseKills(text);
+          shouldResetVotes = resetVotes;
+          for (let kill of kills) {
+            const player = game[dayCount - 1].players[kill];
+            if (player) {
+              player.isDead = true;
+            }
+          }
+        } else {
+          const [kills] = this._parseKills(text);
+          for (let kill of kills) {
+            const player = game[dayCount - 1].players[kill];
+            if (player) {
+              nightKills.push(player);
+            }
           }
         }
-        // const deaths = isDay
-        //   ? this._parseDayKill(text)
-        //   : this._parseNightKill(text);
-        // if (deaths) {
-        //   nightKills.push(deaths);
-        // }
 
         if (!isDay && this._parseIsDay(text)) {
           isDay = true;
           dayCount++;
           game.push({day: dayCount, players: this._createPlayerList(players)});
-          // for (let nightKill of nightKills) {
-          //   const player = game[dayCount - 1].players[nightKill];
-          //   if (player) {
-          //     player.isDead = true;
-          //   }
-          // }
-          // nightKills = [];
+          for (let nightKill of nightKills) {
+            const player = game[dayCount - 1].players[nightKill];
+            if (player) {
+              player.isDead = true;
+            }
+          }
+          nightKills = [];
         } else if (isDay && this._parseIsNight(text)) {
           isDay = false;
+        } else {
+          if (shouldResetVotes) {
+            for (let key in game[dayCount - 1].players) {
+              game[dayCount - 1].players[key].vote = '';
+              game[dayCount - 1].players[key].isValidVote = true;
+            }
+          }
         }
       } else {
         if (isDay) {
           const currentDay = game[dayCount - 1];
           const player = currentDay.players[name];
-          const isLynch = this._calculateIsLynch(Object.values(currentDay.players));
-          const isValidPlayer = players.includes(name) && !player.isDead && !isLynch;
+          //const isLynch = this._calculateIsLynch(Object.values(currentDay.players));
+          const isValidPlayer = players.includes(name) && !player.isDead //&& !isLynch;
           if (!isValidPlayer) continue;
-
+          
           const currentVote = player.vote;
           const [newVote, isValidVote] = this._parsePlayerVote(currentDay.players, player, text);
+
           if (currentVote !== newVote) {
             if (currentVote && currentDay.players[currentVote]) {
               currentDay.players[currentVote].votesFrom =
@@ -118,32 +129,24 @@ class Parser {
     }));
   }
 
-  _parseDayKill = post => {
+  _parseKills = post => {
     if (!this.settings.killPatterns.length) return '';
 
+    const kills = [];
+    let resetVotes = false;
+    
     const pattern = this._combinePatterns(this.settings.killPatterns);
     const matches = post.matchAll(new RegExp(pattern, 'gi'));
+
+    let matchCount = 0;
     for (let match of matches) {
       const key = Object.keys(match.groups).find(k => match.groups[k]);
       const name = (match.groups[key] ?? '').toLowerCase().trim();
-      return this._getPlayerName(name);
+      kills.push(this._getPlayerName(name));
+      resetVotes = resetVotes || this.settings.killPatterns[matchCount++].resetVotes;
     }
 
-    return '';
-  }
-
-  _parseNightKill = post => {
-    if (!this.settings.killPatterns.length) return '';
-
-    const pattern = this._combinePatterns(this.settings.killPatterns);
-    const matches = post.matchAll(new RegExp(pattern, 'gi'));
-    for (let match of matches) {
-      const key = Object.keys(match.groups).find(k => match.groups[k]);
-      const name = (match.groups[key] ?? '').toLowerCase().trim();
-      return this._getPlayerName(name);
-    }
-
-    return '';
+    return [kills, resetVotes];
   }
 
   _calculateIsLynch = players => {
