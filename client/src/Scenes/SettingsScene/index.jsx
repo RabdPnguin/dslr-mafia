@@ -26,7 +26,7 @@ const SettingsScene = () => {
   }, [imported]);
 
   const loadDefaults = () => {
-    fetch('https://gist.githubusercontent.com/RabdPnguin/fe9ade0e7498bd3eb144248f4af7d3cc/raw/dc04fae6c6b67732be83e34b06bf1a4bbdc25847/settings.json')
+    fetch('https://gist.githubusercontent.com/RabdPnguin/fe9ade0e7498bd3eb144248f4af7d3cc/raw/289b5ddf58251bb990193beebc1da335d4a9c64a/settings.json')
       .then(response => response.json())
       .then(json => {
         setSettings(json);
